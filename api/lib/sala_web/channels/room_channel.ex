@@ -1,28 +1,45 @@
 defmodule SalaWeb.RoomChannel do
+  require Logger
+  
   use Phoenix.Channel
 
-  def join("room:" <> room_name, _message, socket) do
-    chat_id = Room.chat(room_name)
+  def join("room:" <> name, _message, socket) do
+    room_pid = Room.Cache.find_room(name)
 
     socket = socket
-      |> assign(:chat, chat_id)
+      |> assign(:room_pid, room_pid)
 
-    messages = Chat.messages(chat_id) |> Enum.reverse()
+    Room.Server.join(room_pid)
+    room = Room.Server.get(room_pid)
 
-    {:ok, %{messages: messages}, socket}
+    send(self(), :after_join)
+
+    {:ok, room, socket}
+  end
+
+  def terminate(_reason, socket) do
+    %{room_pid: room_pid} = socket.assigns
+
+    Room.Server.leave(room_pid)
+
+    broadcast_from!(socket, "userLeave", %{})
+    
+    :stop
   end
 
   def handle_in("message", %{"body" => body}, socket) do
-    %{chat: chat} = socket.assigns
+    %{room_pid: room_pid}  = socket.assigns
 
-    date = DateTime.utc_now()
-    seconds = 0
+    Room.Server.add_message(room_pid, body)
 
-    message = Chat.new_message(body, seconds, date)
-    Chat.add(chat, message)
+    broadcast!(socket, "message", %{body: body})
     
-    broadcast!(socket, "message", message)
-    
+    {:noreply, socket}
+  end
+
+  def handle_info(:after_join, socket) do
+    broadcast_from!(socket, "userJoin", %{})
+
     {:noreply, socket}
   end
 end

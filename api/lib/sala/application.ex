@@ -4,8 +4,7 @@ defmodule Sala.Application do
   use Application
 
   def start(_type, _args) do
-    Room.new("react", "https://www.youtube.com/watch?v=hLljd8pfiFg")
-    |> IO.inspect()
+    Room.Cache.find_room("react")
 
     children = [
       SalaWeb.Endpoint

@@ -22,7 +22,6 @@ defmodule Chat.MixProject do
   defp deps do
     [
       {:jason, "~> 1.0"},
-      {:phoenix_html, "~> 2.11.1"},
     ]
   end
 end
