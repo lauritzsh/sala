@@ -1,0 +1,94 @@
+version: 2
+
+jobs:
+  build_client:
+    docker:
+      - image: node:10.4.1
+    working_directory: ~/code/client
+    steps:
+      - checkout:
+          path: ~/code
+
+      - restore_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+
+      - run: yarn
+      - run: yarn build
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+
+      - run: mkdir -p /tmp
+      - run: mv build /tmp/client
+
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - client
+  build_server:
+    docker:
+      - image: elixir:1.6.6
+    working_directory: ~/code/server
+    steps:
+      - checkout:
+          path: ~/code
+
+      - restore_cache:
+          key: dependency-cache-{{ checksum "mix.lock" }}
+
+      - run: mix local.hex --force
+      - run: mix local.rebar --force
+      - run:
+          command: mix do deps.get, release
+          environment:
+            MIX_ENV: prod
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "mix.lock" }}
+          paths:
+            - deps
+
+      - run: mkdir -p /tmp
+      - run: mv _build/prod/rel/sala/releases/0.1.0/sala.tar.gz /tmp
+
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - sala.tar.gz
+  deploy:
+    machine:
+      enabled: true
+    working_directory: /tmp
+    steps:
+      - run: sudo apt update
+      - run: sudo apt install -y rsync
+
+      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
+
+      - attach_workspace:
+          at: /tmp
+
+      - run: mkdir server
+      - run: tar xvzf sala.tar.gz -C server
+
+      ## Deploying server
+      - run: rsync -va --delete server/* $CI_USER@$HOST:$OUT_DIR/server
+      # We don't care if there is nothing to stop
+      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop; echo 0"
+      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
+
+      ## Deploying client
+      - run: rsync -va --delete client/* $CI_USER@$HOST:$OUT_DIR/client
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build_client
+      - build_server
+      - deploy:
+          requires:
+            - build_client
+            - build_server
