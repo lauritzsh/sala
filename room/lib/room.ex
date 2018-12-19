@@ -1,16 +1,23 @@
 defmodule Room do
+
+  alias Room.User
+
   @derive Jason.Encoder
-  defstruct name: nil, current: 0, chat: Chat.new(), player: Player.new()
+  defstruct name: nil, users: [], chat: Chat.new(), player: Player.new()
 
   def new(name) do
     %__MODULE__{name: name}
   end
 
-  def join(%__MODULE__{} = room) do
-    %__MODULE__{room | current: room.current + 1}
+  def join(%__MODULE__{users: users} = room, %User{} = new_user) do
+    new_users = [new_user | users]
+    
+    %__MODULE__{room | users: new_users}
   end
 
-  def leave(%__MODULE__{} = room) do
-    %__MODULE__{room | current: room.current - 1}
+  def leave(%__MODULE__{users: users} = room, user_id) do
+    new_users = Enum.reject(users, fn user -> user.id == user_id end)
+
+    %__MODULE__{room | users: new_users}
   end
 end

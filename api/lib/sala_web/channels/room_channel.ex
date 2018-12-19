@@ -6,39 +6,49 @@ defmodule SalaWeb.RoomChannel do
   def join("room:" <> name, _message, socket) do
     room_pid = Room.Cache.find_room(name)
 
-    socket = socket
-      |> assign(:room_pid, room_pid)
-
-    Room.Server.join(room_pid)
+    user = Room.Server.join(room_pid)
     room = Room.Server.get(room_pid)
 
-    send(self(), :after_join)
+    socket = socket
+      |> assign(:user, user)
+      |> assign(:room_pid, room_pid)
 
+    send(self(), :after_join)
+    
     {:ok, room, socket}
   end
 
   def terminate(_reason, socket) do
-    %{room_pid: room_pid} = socket.assigns
+    %{user: user, room_pid: room_pid} = socket.assigns
 
-    Room.Server.leave(room_pid)
-
-    broadcast_from!(socket, "userLeave", %{})
+    Room.Server.leave(room_pid, user)
+    broadcast_from!(socket, "userLeave", %{userId: user.id})
     
     :stop
   end
 
+  def handle_in("message", %{"body" => ""}, socket) do
+    {:noreply, socket}
+  end
+
   def handle_in("message", %{"body" => body}, socket) do
-    %{room_pid: room_pid}  = socket.assigns
+    %{user: user, room_pid: room_pid} = socket.assigns
 
-    Room.Server.add_message(room_pid, body)
+    message = Room.Server.add_message(room_pid, user.id, body)
 
-    broadcast!(socket, "message", %{body: body})
+    broadcast!(socket, "message", message)
     
     {:noreply, socket}
   end
 
+  def handle_in("isTyping", %{"isTyping" => typing?}, socket) do
+    broadcast_from!(socket, "userTyping", %{userId: socket.assigns.user.id, isTyping: typing?})
+
+    {:noreply, socket}
+  end
+
   def handle_info(:after_join, socket) do
-    broadcast_from!(socket, "userJoin", %{})
+    broadcast_from!(socket, "userJoin", socket.assigns.user)
 
     {:noreply, socket}
   end

@@ -20,16 +20,16 @@ defmodule Room.Server do
     GenServer.call(room_server, :get)
   end
 
-  def add_message(room_server, body) do
-    GenServer.call(room_server, {:add_message, body})
+  def add_message(room_server, user_id, body) do
+    GenServer.call(room_server, {:add_message, user_id, body})
   end
 
   def join(room_server) do
     GenServer.call(room_server, :join)
   end
 
-  def leave(room_server) do
-    GenServer.call(room_server, :leave)
+  def leave(room_server, user) do
+    GenServer.call(room_server, {:leave, user})
   end
 
   def play(room_server) do
@@ -46,28 +46,35 @@ defmodule Room.Server do
   end
 
   @impl true
-  def handle_call(:get, _from, room) do
-    {:reply, room, room, @expires_in}
+  def handle_call(:get, _from, state) do
+    room = %{state | chat: state.chat |> Enum.reverse() }
+    
+    {:reply, room, state, @expires_in}
   end
 
   @impl true
-  def handle_call({:add_message, body}, _from, room) do
-    new_chat = Chat.add_message(room.chat, %Chat.Message{body: body})
+  def handle_call({:add_message, user_id, body}, _from, room) do
+    new_message = Chat.Message.new(user_id, body)
+    new_chat = Chat.add_message(room.chat, new_message)
     new_room = %{room | chat: new_chat}
     
-    {:reply, new_room, new_room, @expires_in}
+    {:reply, new_message, new_room, @expires_in}
   end
 
   @impl true
   def handle_call(:join, _from, room) do
-    new_room = Room.join(room)
+    user_id = Randomizer.randomizer(6)
+    user_color = ColorMan.Server.take()
+    new_user = Room.User.new(user_id, user_color)
+    new_room = Room.join(room, new_user)
 
-    {:reply, new_room, new_room, @expires_in}
+    {:reply, new_user, new_room, @expires_in}
   end
 
   @impl true
-  def handle_call(:leave, _from, room) do
-    new_room = Room.leave(room)
+  def handle_call({:leave, user}, _from, room) do
+    new_room = Room.leave(room, user.id)
+    ColorMan.Server.give(user.color)
 
     {:reply, new_room, new_room, @expires_in}
   end
