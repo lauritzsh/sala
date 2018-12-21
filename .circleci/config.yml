@@ -8,7 +8,7 @@ jobs:
       - add_ssh_keys
       - checkout
       - run: apt update
-      - run: apt install -y nodejs
+      - run: apt install -y nodejs npm
       - run: npm install -g yarn
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
 
