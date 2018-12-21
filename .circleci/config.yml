@@ -8,8 +8,8 @@ jobs:
       - add_ssh_keys
       - checkout
       - run: apk update
-      - run: apk add --no-cache yarn rsync
-      - run: ssh-keyscan $HOST github.com >> ~/.ssh/known_hosts
+      - run: apk add --no-cache yarn rsync openssh
+      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
       # - run:
       #     command: mix do deps.get, compile
       #     working_directory: api
@@ -17,4 +17,4 @@ jobs:
           command: yarn && yarn build
           working_directory: client
       # FIXME: I don't know why setting UserKnownHostsFile is necessary
-      - run: rsync -e "ssh -o UserKnownHostsFile=~/.ssh/known_hosts" -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
+      - run: rsync -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
