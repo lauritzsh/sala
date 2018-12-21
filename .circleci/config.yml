@@ -52,4 +52,4 @@ workflows:
   build_client_and_server:
     jobs:
       - client
-      - server
+      # - server
