@@ -9,9 +9,8 @@ jobs:
       - checkout
       - run: apk update
       - run: apk add --no-cache yarn rsync openssh
-      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
-      - run: ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
-      - run: cat ~/.ssh/known_hosts
+      # FIXME: It is not working with ~/.ssh/known_hosts
+      - run: ssh-keyscan $HOST >> etc/ssh/ssh_known_hosts
       # - run:
       #     command: mix do deps.get, compile
       #     working_directory: api
