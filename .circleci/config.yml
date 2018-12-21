@@ -12,6 +12,7 @@ jobs:
       - run: ls ~/.ssh
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
       - run: ls ~/.ssh
+      - run: cat ~/.ssh/config
       # - run:
       #     command: mix do deps.get, compile
       #     working_directory: api
