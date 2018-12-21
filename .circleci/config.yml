@@ -8,9 +8,16 @@ jobs:
     steps:
       - checkout:
           path: ~/code
+
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
+
       - run: yarn
+      - run: yarn build
+
+      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
+      - run: rsync -va --delete build/* $CI_USER@$HOST:$OUT_DIR/client
+
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -45,7 +52,6 @@ jobs:
   #     - run:
   #         command: yarn && yarn build
   #         working_directory: client
-  #     - run: rsync -va --delete client/build/* $CI_USER@$HOST:$OUT_DIR/client
 
 workflows:
   version: 2
