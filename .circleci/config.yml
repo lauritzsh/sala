@@ -13,6 +13,7 @@ jobs:
       - run:
           command: mix do deps.get, compile
           working_directory: api
+      - run: npm i -g yarn
       - run:
           command: yarn && yarn build
           working_directory: client
