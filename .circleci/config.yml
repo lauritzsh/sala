@@ -24,7 +24,8 @@ jobs:
       - run: ls
       - run: ls build
 
-      - run: mkdir -p /tmp/client
+      - run: mkdir -p /tmp
+      - run: mv build /tmp/client
 
       - persist_to_workspace:
           root: /tmp/client
