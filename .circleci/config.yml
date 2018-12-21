@@ -5,29 +5,41 @@ jobs:
     docker:
       - image: node:10.4.1
     steps:
-      - run: echo 'hello'
-  build:
+      - run: echo 'hello node'
+  server:
     docker:
       - image: elixir:1.6.6
     steps:
-      - add_ssh_keys
-      - checkout
-      - run: apt update
-      - run: apt install -y nodejs npm
-      - run: npm install -g yarn
-      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
+      - run: echo 'hello elixir'
+  # build:
+  #   docker:
+  #     - image: elixir:1.6.6
+  #   steps:
+  #     - add_ssh_keys
+  #     - checkout
+  #     - run: apt update
+  #     - run: apt install -y nodejs npm
+  #     - run: npm install -g yarn
+  #     - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
 
-      - run:
-          command: mix do deps.get, release
-          working_directory: api
-          environment:
-            MIX_ENV: prod
-      - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
-      - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
-      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop"
-      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
+  #     - run:
+  #         command: mix do deps.get, release
+  #         working_directory: api
+  #         environment:
+  #           MIX_ENV: prod
+  #     - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
+  #     - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
+  #     - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop"
+  #     - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
 
-      - run:
-          command: yarn && yarn build
-          working_directory: client
-      - run: rsync -va --delete client/build/* $CI_USER@$HOST:$OUT_DIR/client
+  #     - run:
+  #         command: yarn && yarn build
+  #         working_directory: client
+  #     - run: rsync -va --delete client/build/* $CI_USER@$HOST:$OUT_DIR/client
+
+workflows:
+  version: 2
+  build_client_and_server:
+    jobs:
+      - client
+      - server
