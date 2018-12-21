@@ -47,6 +47,18 @@ defmodule SalaWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("isPlaying", %{"isPlaying" => playing?}, socket) do
+    broadcast!(socket, "isPlaying", %{isPlaying: playing?})
+
+    {:noreply, socket}
+  end
+
+  def handle_in("seek", %{"timestamp" => timestamp}, socket) do
+    broadcast!(socket, "seek", %{timestamp: timestamp})
+
+    {:noreply, socket}
+  end
+
   def handle_info(:after_join, socket) do
     broadcast_from!(socket, "userJoin", socket.assigns.user)
 

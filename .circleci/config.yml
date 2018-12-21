@@ -1,0 +1,19 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: bitwalker/alpine-elixir-phoenix:1.6.6
+    steps:
+      - add_ssh_keys
+      - checkout
+      - run: apk update
+      - run: apk add rsync openssh
+      - run: echo "$HOST ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCLzDW1sPmgU4+Vp2isgt04qf/M0EDFuXrpcYG28f2/pTw3iHJXHcpgoOXUXZubl6f9iw2awyhQrEevz1/Lqg+k=" >> ~/.ssh/known_hosts
+      - run:
+          command: mix do deps.get, compile
+          working_directory: api
+      - run:
+          command: yarn && yarn build
+          working_directory: client
+      - run: rsync -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR

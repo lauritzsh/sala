@@ -32,21 +32,12 @@ class RoomChannel {
     return this.setupSub('userTyping', cb);
   }
 
-  pushMessage(body) {
-    this.channel.push('message', { body });
-
-    return this;
+  onPlay(cb) {
+    return this.setupSub('isPlaying', cb);
   }
 
-  pushIsTyping(isTyping) {
-    this.channel.push('isTyping', { isTyping });
-
-    return this;
-  }
-
-  unsubscribe() {
-    this.channel.leave();
-    this.channel = null;
+  onSeek(cb) {
+    return this.setupSub('seek', cb);
   }
 
   setupSub(event, cb) {
@@ -59,6 +50,35 @@ class RoomChannel {
     this[eventRef] = this.channel.on(event, cb);
 
     return this;
+  }
+
+  pushMessage(body) {
+    this.channel.push('message', { body });
+
+    return this;
+  }
+
+  pushIsTyping(isTyping) {
+    this.channel.push('isTyping', { isTyping });
+
+    return this;
+  }
+
+  pushIsPlaying(isPlaying) {
+    this.channel.push('isPlaying', { isPlaying });
+
+    return this;
+  }
+
+  pushSeek(timestamp) {
+    this.channel.push('seek', { timestamp });
+
+    return this;
+  }
+
+  unsubscribe() {
+    this.channel.leave();
+    this.channel = null;
   }
 }
 

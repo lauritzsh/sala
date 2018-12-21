@@ -1,48 +1,27 @@
-import React, { useEffect, useRef, useReducer } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import produce from 'immer';
 
 import RoomChannel from './ChatService';
-import RoomStatus from './RoomStatus';
-import ChatStatus from './ChatStatus';
 import Chat from './Chat';
-import Input from './Input';
+import Player from './Player';
 
 const reducer = produce((draft, action) => {
   switch (action.type) {
     case 'JOIN_REQUEST':
-      return { isLoading: true, error: null };
+      draft.isLoading = true;
+      draft.error = null;
+      return;
 
     case 'JOIN_SUCCESS':
       return { ...action.payload, isLoading: false, error: null };
 
     case 'JOIN_FAILURE':
-      return { isLoading: false, error: action.payload };
-
-    case 'ADD_MESSAGE': {
-      draft.chat.push(action.payload);
+      draft.isLoading = false;
+      draft.error = action.payload;
       return;
-    }
 
-    case 'USER_JOIN': {
-      draft.users.push(action.payload);
+    case 'LEAVE':
       return;
-    }
-
-    case 'USER_LEAVE': {
-      draft.users = draft.users.filter(u => u.id !== action.payload);
-      return;
-    }
-
-    case 'USER_TYPING': {
-      const { userId, isTyping } = action.payload;
-      draft.users.forEach(u => {
-        if (u.id === userId) {
-          u.isTyping = isTyping;
-        }
-      });
-
-      return;
-    }
 
     default:
       return;
@@ -50,18 +29,9 @@ const reducer = produce((draft, action) => {
 });
 
 const Room = ({ name }) => {
-  const bottomRef = useRef(null);
-  const [state, dispatch] = useReducer(reducer, {
-    isLoading: true,
-    error: null
-  });
-  const { isLoading, chat, users } = state;
+  const [url] = useState('https://youtu.be/9CAbLfHd2Xs');
 
-  function scrollToBottom() {
-    bottomRef.current.scrollIntoView({
-      behavior: 'smooth'
-    });
-  }
+  const [state, dispatch] = useReducer(reducer, { isLoading: true });
 
   useEffect(
     () => {
@@ -70,7 +40,6 @@ const Room = ({ name }) => {
       RoomChannel.join(name, {
         onSuccess(room) {
           dispatch({ type: 'JOIN_SUCCESS', payload: room });
-          scrollToBottom();
         },
         onError(error) {
           dispatch({ type: 'JOIN_FAILURE', payload: error });
@@ -80,60 +49,30 @@ const Room = ({ name }) => {
 
       return () => {
         dispatch({ type: 'LEAVE' });
-
         RoomChannel.unsubscribe();
       };
     },
     [name]
   );
 
-  function handleMessage(message) {
-    dispatch({ type: 'ADD_MESSAGE', payload: message });
-    scrollToBottom();
+  if (state.isLoading) {
+    return <div>Loading...</div>;
   }
 
-  function handleUserJoin(user) {
-    dispatch({ type: 'USER_JOIN', payload: user });
-  }
-
-  function handleUserLeave({ userId }) {
-    dispatch({ type: 'USER_LEAVE', payload: userId });
-  }
-
-  function handleUserTyping({ isTyping, userId }) {
-    dispatch({ type: 'USER_TYPING', payload: { isTyping, userId } });
-  }
-
-  useEffect(() => {
-    RoomChannel.onMessage(handleMessage)
-      .onUserJoin(handleUserJoin)
-      .onUserLeave(handleUserLeave)
-      .onUserTyping(handleUserTyping);
-  });
-
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
+  console.log(state);
 
   return (
     <div
       style={{
         display: 'grid',
         gridTemplateColumns: '1fr 400px',
-        gridTemplateRows: '6rem 1fr 2rem 100px',
         width: '100%',
         height: '100%',
         position: 'absolute'
       }}
     >
-      <div style={{ gridRow: 'span 4' }}>hello</div>
-      <RoomStatus users={users} />
-      <Chat bottomRef={bottomRef} messages={chat} users={users} />
-      <ChatStatus users={users} />
-      <Input
-        pushMessage={body => RoomChannel.pushMessage(body)}
-        pushIsTyping={isTyping => RoomChannel.pushIsTyping(isTyping)}
-      />
+      <Player url={url} style={{ margin: '1rem' }} />
+      <Chat initialChat={state.chat} initialUsers={state.users} />
     </div>
   );
 };

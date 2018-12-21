@@ -29,7 +29,13 @@ const Input = ({ pushMessage, pushIsTyping }) => {
   return (
     <div style={{ padding: '1rem 1rem 1rem 0' }}>
       <textarea
-        style={{ width: '100%', height: '100%' }}
+        style={{
+          padding: '0.5rem',
+          width: '100%',
+          height: '100%',
+          resize: 'none',
+          outline: 'none'
+        }}
         autoFocus
         value={text}
         onChange={e => setText(e.target.value)}

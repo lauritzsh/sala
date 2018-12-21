@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useReducer } from 'react';
-import { Router, Link } from '@reach/router';
+import React from 'react';
+import { Router } from '@reach/router';
 
 import './App.css';
 import Room from './Room';
