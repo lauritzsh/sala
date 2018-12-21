@@ -11,7 +11,7 @@ use Mix.Config
 # before starting your production server.
 config :sala, SalaWeb.Endpoint,
   http: [port: 4000],
-  url: [host: "localhost", port: 80],
+  url: [host: "sala.lauritz.me", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   server: true,
