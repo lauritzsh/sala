@@ -71,6 +71,7 @@ jobs:
           at: /tmp
 
       - run: ls
+      - run: mkdir server
       - run: tar xvzf sala.tar.gz -C server
       - run: ls
 
