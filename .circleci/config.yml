@@ -7,15 +7,17 @@ jobs:
     steps:
       - add_ssh_keys
       - checkout
+      - run: ls ~/.ssh
       - run: apk update
       - run: apk add --no-cache yarn rsync openssh
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
+      - run: ls ~/.ssh
       # - run:
       #     command: mix do deps.get, compile
       #     working_directory: api
-      - run:
-          command: yarn && yarn build
-          working_directory: client
-      - run: cat ~/.ssh/known_hosts
-      # FIXME: I don't know why setting UserKnownHostsFile is necessary
-      - run: rsync -e "ssh -o UserKnownHostsFile=~/.ssh/known_hosts" -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
+      # - run:
+      #     command: yarn && yarn build
+      #     working_directory: client
+      # - run: cat ~/.ssh/known_hosts
+      # # FIXME: I don't know why setting UserKnownHostsFile is necessary
+      # - run: rsync -e "ssh -o UserKnownHostsFile=~/.ssh/known_hosts" -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
