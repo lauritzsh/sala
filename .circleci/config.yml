@@ -47,23 +47,24 @@ jobs:
           paths:
             - deps
 
-      - save_cache:
-          key: server
+      - persist_to_workspace:
+          root: /tmp/client
           paths:
-            - _build
+            - build
   deploy:
     machine:
         enabled: true
     working_directory: ~/code
     steps:
-      - restore_cache:
-          key: client
-      - run: ls
-      - run: ls api
       - run: sudo apt update
       - run: sudo apt install -y rsync
 
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
+
+      - attach_workspace:
+          at: /tmp/client
+
+      - run: ls
 
       ## Deploying server
       - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
