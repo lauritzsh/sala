@@ -6,6 +6,14 @@ jobs:
       - image: node:10.4.1
     steps:
       - run: echo 'hello node'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run: yarn
+      - run: echo 'done and saving cache'
+      - save_cache:
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
   server:
     docker:
       - image: elixir:1.6.6
