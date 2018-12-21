@@ -31,7 +31,7 @@ jobs:
     working_directory: ~/code/api
     steps:
       - checkout:
-          path: ~/api
+          path: ~/code
 
       - run:
           command: mix do deps.get, release
