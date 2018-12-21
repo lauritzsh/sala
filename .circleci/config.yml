@@ -20,9 +20,10 @@ jobs:
           paths:
             - node_modules
 
-      - store_artifacts:
-          path: build
-          destination: build
+      - save_cache:
+          key: client
+          paths:
+            - build
   build_server:
     docker:
       - image: elixir:1.6.6
@@ -47,15 +48,17 @@ jobs:
             - deps
 
       - save_cache:
-          key: server-build-{{ checksum "_build" }}
+          key: server
           paths:
-            - build
+            - _build
   deploy:
     machine:
         enabled: true
     working_directory: ~/code
     steps:
-      - restore_cache
+      - restore_cache:
+          key: client
+      - run: ls
       - run: ls api
       - run: sudo apt update
       - run: sudo apt install -y rsync
@@ -79,7 +82,7 @@ workflows:
     jobs:
       - build_client
       # - build_server
-      # - deploy:
-      #     requires:
-      #       - build_client
+      - deploy:
+          requires:
+            - build_client
       #       - build_server
