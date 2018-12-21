@@ -3,14 +3,15 @@ version: 2
 jobs:
   build:
     docker:
-      - image: bitwalker/alpine-elixir-phoenix:1.6.6
+      - image: elixir:1.6.6
     steps:
       - add_ssh_keys
       - checkout
-      - run: apk update
-      - run: apk add --no-cache yarn rsync openssh
-      # FIXME: It is not working with ~/.ssh/known_hosts
-      - run: ssh-keyscan $HOST >> /etc/ssh/ssh_known_hosts
+      - run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run: apt update
+      - run: apt install nodejs yarn
+      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
 
       - run:
           command: mix do deps.get, release
@@ -19,7 +20,6 @@ jobs:
             MIX_ENV: prod
       - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
       - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
-      - run: ssh $CI_USER@$HOST "ls $OUT_DIR/server"
       - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop"
       - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
 
