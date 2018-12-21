@@ -8,10 +8,8 @@ jobs:
       - add_ssh_keys
       - run: apk update
       - run: apk add --no-cache yarn rsync openssh
+      - run: ssh-keyscan $HOST github.com >> ~/.ssh/known_hosts
       - checkout
-      - run: ls ~/.ssh
-      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
-      - run: ls ~/.ssh
       # - run:
       #     command: mix do deps.get, compile
       #     working_directory: api
