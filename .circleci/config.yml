@@ -22,6 +22,7 @@ jobs:
 
       - store_artifacts:
           path: build
+          destination: build
   build_server:
     docker:
       - image: elixir:1.6.6
