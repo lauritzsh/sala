@@ -9,12 +9,13 @@ jobs:
       - checkout
       - run: apk update
       - run: apk add --no-cache yarn rsync openssh
+      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
       - run: ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+      - run: cat ~/.ssh/known_hosts
       # - run:
       #     command: mix do deps.get, compile
       #     working_directory: api
       - run:
           command: yarn && yarn build
           working_directory: client
-      # FIXME: I don't know why setting UserKnownHostsFile is necessary
       - run: rsync -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
