@@ -52,7 +52,7 @@ jobs:
   deploy:
     machine:
         enabled: true
-    working_directory: ~/code
+    working_directory: /tmp
     steps:
       - run: sudo apt update
       - run: sudo apt install -y rsync
@@ -60,10 +60,9 @@ jobs:
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
 
       - attach_workspace:
-          at: /tmp/client
+          at: /tmp
 
-      - run: ls /tmp
-      - run: ls /tmp/client
+      - run: ls client
 
       ## Deploying server
       # - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
@@ -73,7 +72,7 @@ jobs:
       # - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
 
       ## Deploying client
-      - run: rsync -va --delete tmp/client/* $CI_USER@$HOST:$OUT_DIR/client
+      - run: rsync -va --delete client/* $CI_USER@$HOST:$OUT_DIR/client
     
 
 workflows:
