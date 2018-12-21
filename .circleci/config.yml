@@ -7,8 +7,8 @@ jobs:
     steps:
       - add_ssh_keys
       - checkout
-      - run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-      - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+      - run: echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
       - run: apt update
       - run: apt install nodejs yarn
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
