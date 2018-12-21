@@ -4,11 +4,10 @@ jobs:
   client:
     docker:
       - image: node:10.4.1
-    working_directory: ~/client
+    working_directory: ~/code/client
     steps:
-      - checkout
-      - run: cd client
-      - run: pwd
+      - checkout:
+          path: ~/code
       - run: ls
       - run: echo 'hello node'
       - restore_cache:
