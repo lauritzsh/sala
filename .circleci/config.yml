@@ -20,8 +20,10 @@ jobs:
           paths:
             - node_modules
 
+      - run: mkdir -p ~/builds/client
+
       - persist_to_workspace:
-          root: ~/client
+          root: ~/builds/client
           paths:
             - build
   build_server:
