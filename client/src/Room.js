@@ -35,6 +35,8 @@ const Room = ({ name }) => {
 
   useEffect(
     () => {
+      document.title = `#${name}`;
+
       dispatch({ type: 'JOIN_REQUEST' });
 
       RoomChannel.join(name, {
