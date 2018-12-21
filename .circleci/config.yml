@@ -11,6 +11,7 @@ jobs:
       - run: apk add --no-cache yarn rsync openssh
       - run: ls ~/.ssh
       - run: echo "$HOST ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCLzDW1sPmgU4+Vp2isgt04qf/M0EDFuXrpcYG28f2/pTw3iHJXHcpgoOXUXZubl6f9iw2awyhQrEevz1/Lqg+k=" >> ~/.ssh/known_hosts
+      - run: ls ~/.ssh
       - run:
           command: mix do deps.get, compile
           working_directory: api
