@@ -8,6 +8,7 @@ jobs:
     steps:
       - checkout
       - run: cd client
+      - run: pwd
       - run: ls
       - run: echo 'hello node'
       - restore_cache:
