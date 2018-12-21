@@ -20,12 +20,10 @@ jobs:
           paths:
             - node_modules
 
-      - run: mkdir -p ~/builds/client
-
       - persist_to_workspace:
-          root: ~/builds/client
+          root: build
           paths:
-            - build
+            - client-build
   build_server:
     docker:
       - image: elixir:1.6.6
