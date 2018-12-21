@@ -28,6 +28,39 @@ const Player = ({ style }) => {
       });
   });
 
+  const controls = (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        padding: '1rem'
+      }}
+    >
+      <div style={{ flex: '1' }} />
+      <div>
+        <button onClick={() => RoomChannel.pushIsPlaying(!isPlaying)}>
+          {isPlaying ? 'Pause' : 'Play'}
+        </button>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={timestamp}
+          onMouseUp={() => {
+            RoomChannel.pushSeek(timestamp);
+          }}
+          onChange={event => {
+            setTimestamp(parseFloat(event.target.value));
+          }}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div
       style={{
@@ -51,36 +84,7 @@ const Player = ({ style }) => {
           setIsPlaying(false);
         }}
       />
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          padding: '1rem'
-        }}
-      >
-        <div style={{ flex: '1' }} />
-        <div>
-          <button onClick={() => RoomChannel.pushIsPlaying(!isPlaying)}>
-            {isPlaying ? 'Pause' : 'Play'}
-          </button>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={timestamp}
-            onMouseUp={() => {
-              RoomChannel.pushSeek(timestamp);
-            }}
-            onChange={event => {
-              setTimestamp(parseFloat(event.target.value));
-            }}
-          />
-        </div>
-      </div>
+      {url ? controls : <div />}
     </div>
   );
 };
