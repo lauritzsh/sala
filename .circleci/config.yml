@@ -8,8 +8,6 @@ jobs:
     steps:
       - checkout:
           path: ~/code
-      - run: ls
-      - run: echo 'hello node'
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run: yarn
