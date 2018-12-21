@@ -49,6 +49,14 @@ jobs:
           key: dependency-cache-{{ checksum "mix.lock" }}
           paths:
             - deps
+
+      - run: mkdir -p /tmp
+      - run: mv _build/prod/rel/sala/releases/0.1.0/sala.tar.gz /tmp
+
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - sala.tar.gz
   deploy:
     machine:
         enabled: true
@@ -62,14 +70,15 @@ jobs:
       - attach_workspace:
           at: /tmp
 
-      - run: ls client
+      - run: ls
+      - run: tar xvzf sala.tar.gz -C server
+      - run: ls
 
       ## Deploying server
-      # - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
-      # - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
-      # # We don't care if there is nothing to stop
-      # - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop; echo 0"
-      # - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
+      - run: rsync -va --delete server/* $CI_USER@$HOST:$OUT_DIR/server
+      # We don't care if there is nothing to stop
+      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop; echo 0"
+      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
 
       ## Deploying client
       - run: rsync -va --delete client/* $CI_USER@$HOST:$OUT_DIR/client
