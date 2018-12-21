@@ -37,6 +37,7 @@ jobs:
           key: dependency-cache-{{ checksum "mix.lock" }}
 
       - run: mix local.hex --force
+      - run: mix local.rebar --force
       - run:
           command: mix do deps.get, release
           environment:
