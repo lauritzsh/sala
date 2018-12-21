@@ -24,10 +24,12 @@ jobs:
       - run: ls
       - run: ls build
 
+      - run: mkdir -p /tmp/client
+
       - persist_to_workspace:
-          root: build
+          root: /tmp/client
           paths:
-            - client-build
+            - build
   build_server:
     docker:
       - image: elixir:1.6.6
