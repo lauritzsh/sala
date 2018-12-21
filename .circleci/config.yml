@@ -52,7 +52,7 @@ jobs:
             - deps
 
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
-      - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
+      - run: rsync -va --delete _build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
       - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
       - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop"
       - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
