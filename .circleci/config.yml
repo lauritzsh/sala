@@ -89,8 +89,8 @@ workflows:
   build_and_deploy:
     jobs:
       - build_client
-      # - build_server
+      - build_server
       - deploy:
           requires:
             - build_client
-      #       - build_server
+            - build_server
