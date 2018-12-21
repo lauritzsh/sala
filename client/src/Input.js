@@ -38,8 +38,11 @@ const Input = ({ pushMessage, pushIsTyping }) => {
           padding: '0.5rem',
           width: '100%',
           height: '100%',
+          outline: 'none',
+          border: 'none',
           resize: 'none',
-          outline: 'none'
+          background: '#3D4852',
+          color: 'white'
         }}
         autoFocus
         value={text}
