@@ -49,8 +49,8 @@ jobs:
       - checkout:
           path: ~/code
       - run: ls
-      - run: apt update
-      - run: apt install -y rsync
+      - run: sudo apt update
+      - run: sudo apt install -y rsync
 
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
 
