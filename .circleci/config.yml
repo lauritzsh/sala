@@ -21,7 +21,7 @@ jobs:
             - node_modules
 
       - persist_to_workspace:
-          root: /tmp/client
+          root: .
           paths:
             - build
   build_server:
