@@ -23,9 +23,6 @@ jobs:
       - run: mkdir -p /tmp
       - run: mv build /tmp/client
 
-      - run: ls /tmp
-      - run: ls /tmp/client
-
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -63,20 +60,20 @@ jobs:
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
 
       - attach_workspace:
-          at: ~/client
+          at: /tmp/client
 
-      - run: ls
-      - run: ls ~
+      - run: ls /tmp
+      - run: ls /tmp/client
 
       ## Deploying server
-      - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
-      - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
-      # We don't care if there is nothing to stop
-      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop; echo 0"
-      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
+      # - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
+      # - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
+      # # We don't care if there is nothing to stop
+      # - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop; echo 0"
+      # - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
 
       ## Deploying client
-      - run: rsync -va --delete client/build/* $CI_USER@$HOST:$OUT_DIR/client
+      - run: rsync -va --delete tmp/client/* $CI_USER@$HOST:$OUT_DIR/client
     
 
 workflows:
