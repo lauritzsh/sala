@@ -22,5 +22,6 @@ jobs:
       - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
       - run: rsync -va --delete client/build/* $CI_USER@$HOST:$OUT_DIR/client
       - run: ssh $CI_USER@$HOST "tar -xzf $OUT_DIR/server/sala.tar.gz"
+      - run: ssh $CI_USER@$HOST "ls $OUT_DIR"
       - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop"
       - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
