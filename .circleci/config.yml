@@ -8,12 +8,11 @@ jobs:
       - add_ssh_keys
       - checkout
       - run: apk update
-      - run: apk add rsync openssh
+      - run: apk add --no-cache yarn rsync openssh
       - run: echo "$HOST ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCLzDW1sPmgU4+Vp2isgt04qf/M0EDFuXrpcYG28f2/pTw3iHJXHcpgoOXUXZubl6f9iw2awyhQrEevz1/Lqg+k=" >> ~/.ssh/known_hosts
       - run:
           command: mix do deps.get, compile
           working_directory: api
-      - run: npm i -g yarn
       - run:
           command: yarn && yarn build
           working_directory: client
