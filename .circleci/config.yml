@@ -11,17 +11,19 @@ jobs:
       - run: apk add --no-cache yarn rsync openssh
       # FIXME: It is not working with ~/.ssh/known_hosts
       - run: ssh-keyscan $HOST >> /etc/ssh/ssh_known_hosts
+
       - run:
           command: mix do deps.get, release
           working_directory: api
           environment:
             MIX_ENV: prod
+      - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
+      - run: ssh $CI_USER@$HOST "tar xvzf $OUT_DIR/server/sala.tar.gz"
+      - run: ssh $CI_USER@$HOST "ls $OUT_DIR/server"
+      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop"
+      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
+
       - run:
           command: yarn && yarn build
           working_directory: client
-      - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
       - run: rsync -va --delete client/build/* $CI_USER@$HOST:$OUT_DIR/client
-      - run: ssh $CI_USER@$HOST "tar -xzf $OUT_DIR/server/sala.tar.gz"
-      - run: ssh $CI_USER@$HOST "ls $OUT_DIR"
-      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop"
-      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
