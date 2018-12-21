@@ -19,4 +19,4 @@ jobs:
       - run:
           command: yarn && yarn build
           working_directory: client
-      - run: rsync -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
+      - run: rsync -o UserKnownHostsFile=~/.ssh/known_hosts -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
