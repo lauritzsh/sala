@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  client:
+  build_client:
     docker:
       - image: node:10.4.1
     working_directory: ~/code/client
@@ -9,32 +9,23 @@ jobs:
       - checkout:
           path: ~/code
 
-      - run: apt update
-      - run: apt install -y rsync
-
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
 
       - run: yarn
       - run: yarn build
 
-      - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
-      - run: rsync -va --delete build/* $CI_USER@$HOST:$OUT_DIR/client
-
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
-  server:
+  build_server:
     docker:
       - image: elixir:1.6.6
     working_directory: ~/code/api
     steps:
       - checkout:
           path: ~/code
-
-      - run: apt update
-      - run: apt install -y rsync
 
       - restore_cache:
           key: dependency-cache-{{ checksum "mix.lock" }}
@@ -50,16 +41,31 @@ jobs:
           key: dependency-cache-{{ checksum "mix.lock" }}
           paths:
             - deps
+  deploy:
+      - run: ls
+      - run: apt update
+      - run: apt install -y rsync
 
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
-      - run: rsync -va --delete _build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
+
+      ## Deploying server
+      - run: rsync -va --delete server/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
       - run: ssh $CI_USER@$HOST "cd $OUT_DIR/server && tar xvzf sala.tar.gz"
-      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop; echo 0" # We don't care if there is nothing to stop
+      # We don't care if there is nothing to stop
+      - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala stop; echo 0"
       - run: ssh $CI_USER@$HOST "$OUT_DIR/server/bin/sala start"
+
+      ## Deploying client
+      - run: rsync -va --delete client/build/* $CI_USER@$HOST:$OUT_DIR/client
+    
 
 workflows:
   version: 2
-  build_client_and_server:
+  build_and_deploy:
     jobs:
-      - client
-      - server
+      - build_client
+      - build_server
+      - deploy:
+          requires:
+            - build_client
+            - build_server
