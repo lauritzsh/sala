@@ -4,12 +4,12 @@ jobs:
   client:
     docker:
       - image: node:10.4.1
-    working_directory: ~/code/client
+    working_directory: ~/repo/client
     steps:
       - run: apt update
       - run: apt install -y rsync
       - checkout:
-          path: ~/code
+          path: ~/repo
 
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
