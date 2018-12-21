@@ -20,8 +20,8 @@ jobs:
           paths:
             - node_modules
 
-      - save_cache:
-          key: client
+      - persist_to_workspace:
+          root: /tmp/client
           paths:
             - build
   build_server:
@@ -46,11 +46,6 @@ jobs:
           key: dependency-cache-{{ checksum "mix.lock" }}
           paths:
             - deps
-
-      - persist_to_workspace:
-          root: /tmp/client
-          paths:
-            - build
   deploy:
     machine:
         enabled: true
