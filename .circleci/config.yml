@@ -9,11 +9,13 @@ jobs:
       - checkout
       - run: apk update
       - run: apk add --no-cache yarn rsync openssh
+      - run: ls ~/.ssh
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
+      - run: ls ~/.ssh
       # - run:
       #     command: mix do deps.get, compile
       #     working_directory: api
       - run:
           command: yarn && yarn build
           working_directory: client
-      - run: echo 'yes' | rsync -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
+      - run: rsync -va --delete client/build/* $CI_USER@$HOST:$CLIENT_DIR
