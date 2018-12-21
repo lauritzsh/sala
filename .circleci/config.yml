@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: bitwalker/alpine-elixir-phoenix:1.6.6
     steps:
+      - run: ls ~/.ssh
       - add_ssh_keys
       - checkout
       - run: ls ~/.ssh
