@@ -6,14 +6,10 @@ defmodule Room.Cache do
   end
 
   def find_room(room_name) do
-    existing_room(room_name) || new_room(room_name)
+    find_or_create_room(room_name)
   end
 
-  defp existing_room(room_name) do
-    Room.Server.where_is(room_name)
-  end
-
-  defp new_room(room_name) do
+  defp find_or_create_room(room_name) do
     case DynamicSupervisor.start_child(__MODULE__, {Room.Server, room_name}) do
       {:ok, pid} -> pid
       {:error, {:already_started, pid}} -> pid

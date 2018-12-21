@@ -1,7 +1,7 @@
 defmodule Room.Server do
   require Logger
 
-  use GenServer, restart: :temporary
+  use GenServer, restart: :transient
 
   @expires_in 10 * 60 * 1000
 
@@ -64,8 +64,8 @@ defmodule Room.Server do
   @impl true
   def handle_call(:join, _from, room) do
     user_id = Randomizer.randomizer(6)
-    user_color = ColorMan.Server.take()
-    new_user = Room.User.new(user_id, user_color)
+    user_symbol = ColorMan.Server.take()
+    new_user = Room.User.new(user_id, user_symbol)
     new_room = Room.join(room, new_user)
 
     {:reply, new_user, new_room, @expires_in}
@@ -74,7 +74,7 @@ defmodule Room.Server do
   @impl true
   def handle_call({:leave, user}, _from, room) do
     new_room = Room.leave(room, user.id)
-    ColorMan.Server.give(user.color)
+    ColorMan.Server.give(user.symbol)
 
     {:reply, new_room, new_room, @expires_in}
   end

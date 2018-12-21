@@ -40,6 +40,10 @@ class RoomChannel {
     return this.setupSub('seek', cb);
   }
 
+  onNewVideo(cb) {
+    return this.setupSub('newVideo', cb);
+  }
+
   setupSub(event, cb) {
     const eventRef = event + 'Ref';
 
@@ -72,6 +76,12 @@ class RoomChannel {
 
   pushSeek(timestamp) {
     this.channel.push('seek', { timestamp });
+
+    return this;
+  }
+
+  pushNewVideo(url) {
+    this.channel.push('newVideo', { url });
 
     return this;
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import produce from 'immer';
 
 import RoomChannel from './ChatService';
@@ -29,8 +29,6 @@ const reducer = produce((draft, action) => {
 });
 
 const Room = ({ name }) => {
-  const [url] = useState('https://youtu.be/9CAbLfHd2Xs');
-
   const [state, dispatch] = useReducer(reducer, { isLoading: true });
 
   useEffect(
@@ -73,7 +71,7 @@ const Room = ({ name }) => {
         position: 'absolute'
       }}
     >
-      <Player url={url} style={{ margin: '1rem' }} />
+      <Player style={{ margin: '1rem' }} />
       <Chat initialChat={state.chat} initialUsers={state.users} />
     </div>
   );

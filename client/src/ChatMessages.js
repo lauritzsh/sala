@@ -1,31 +1,30 @@
 import React from 'react';
 
-import Circle from './Circle';
+import Avatar from './Avatar';
 
-const userToColor = (userId, users) => {
+const userToSymbol = (userId, users) => {
   const user = users.find(u => u.id === userId);
 
   if (user) {
-    return user.color;
+    return user.symbol;
   }
 
   return '';
 };
 
-const Message = ({ body, color, userId }) => (
-  <div style={{ display: 'flex', marginBottom: '0.5rem' }}>
+const Message = ({ body, symbol, userId }) => (
+  <div style={{ display: 'flex', marginBottom: '1rem' }}>
     <div
       title={userId}
       style={{
         display: 'flex',
-        marginRight: '0.5rem',
-        justifyContent: 'center',
+        width: '1rem',
         alignItems: 'center'
       }}
     >
-      {color ? <Circle color={color} /> : <Circle border="#8795A1" />}
+      {symbol ? <Avatar symbol={symbol} /> : <Avatar left />}
     </div>
-    <div>{body}</div>
+    <div style={{ flex: '1' }}>{body}</div>
   </div>
 );
 
@@ -36,9 +35,9 @@ const Chat = ({ users, messages, bottomRef, style }) => {
 
   const Messages = () =>
     messages.map(({ user_id, body }, i) => {
-      const color = userToColor(user_id, users);
+      const symbol = userToSymbol(user_id, users);
 
-      return <Message key={i} body={body} color={color} userId={user_id} />;
+      return <Message key={i} body={body} symbol={symbol} userId={user_id} />;
     });
 
   return (

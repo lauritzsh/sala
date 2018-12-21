@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useReducer } from 'react';
 import produce from 'immer';
 
+import ChatMessages from './ChatMessages';
+import ChatStatus from './ChatStatus';
+import Input from './Input';
 import RoomChannel from './ChatService';
 import RoomStatus from './RoomStatus';
-import ChatStatus from './ChatStatus';
-import ChatMessages from './ChatMessages';
-import Input from './Input';
+import VideoInput from './VideoInput';
 
 const reducer = produce((draft, action) => {
   switch (action.type) {
@@ -87,9 +88,10 @@ const Chat = ({ initialChat, initialUsers }) => {
       style={{
         minHeight: 0,
         display: 'grid',
-        gridTemplateRows: '6rem 1fr 2rem 6rem'
+        gridTemplateRows: 'auto 6rem 1fr 2rem 6rem'
       }}
     >
+      <VideoInput />
       <RoomStatus users={users} />
       <ChatMessages
         style={{ overflow: 'auto', paddingRight: '1rem' }}

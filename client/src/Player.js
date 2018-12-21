@@ -3,15 +3,12 @@ import ReactPlayer from 'react-player';
 
 import RoomChannel from './ChatService';
 
-const Player = ({ url, style }) => {
-  if (!url) {
-    return <div style={{ ...style, background: '#22292F' }} />;
-  }
-
+const Player = ({ style }) => {
   const playerRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [timestamp, setTimestamp] = useState(0);
+  const [url, setUrl] = useState(null);
 
   function handleIsPlaying({ isPlaying }) {
     setIsPlaying(isPlaying);
@@ -23,7 +20,12 @@ const Player = ({ url, style }) => {
   }
 
   useEffect(() => {
-    RoomChannel.onPlay(handleIsPlaying).onSeek(handleSeek);
+    RoomChannel.onPlay(handleIsPlaying)
+      .onSeek(handleSeek)
+      .onNewVideo(function handleNewVideo(video) {
+        console.log('Got new video', video);
+        setUrl(video.url);
+      });
   });
 
   return (

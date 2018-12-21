@@ -2,16 +2,7 @@ defmodule ColorMan.Server do
   use GenServer
 
   @colors [
-  "#E3342F",
-  "#F6993F",
-  "#FFED4A",
-  "#38C172",
-  "#4DC0B5",
-  "#3490DC",
-  "#6574CD",
-  "#9561E2",
-  "#F66D9B",
-  "#22292F"
+    "🐶", "🐱", "🐭", "🐹", "🐰"
 ] 
 
   def start_link(_) do

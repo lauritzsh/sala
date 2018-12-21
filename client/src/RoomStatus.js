@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Circle from './Circle';
+import Avatar from './Avatar';
 
 const RoomStatus = ({ users }) => {
   return (
@@ -10,8 +10,13 @@ const RoomStatus = ({ users }) => {
         alignItems: 'center'
       }}
     >
-      {users.map(({ id, color }) => (
-        <Circle key={id} style={{ marginRight: '0.5rem' }} color={color} big />
+      {users.map(({ id, symbol }) => (
+        <Avatar
+          key={id}
+          style={{ marginRight: '0.5rem' }}
+          big
+          symbol={symbol}
+        />
       ))}
     </div>
   );

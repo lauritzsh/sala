@@ -1,11 +1,11 @@
 import React from 'react';
 
-import Circle from './Circle';
+import Avatar from './Avatar';
 
 const ChatStatus = ({ users }) => {
   const typers = users
     .filter(u => u.isTyping)
-    .map(u => <Circle key={u.id} color={u.color} />);
+    .map(u => <Avatar key={u.id} symbol={u.symbol} />);
 
   if (typers.length === 0) {
     return <div />;

@@ -59,6 +59,13 @@ defmodule SalaWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("newVideo", %{"url" => url}, socket) do
+    IO.inspect(url)
+    broadcast!(socket, "newVideo", %{url: url})
+
+    {:noreply, socket}
+  end
+
   def handle_info(:after_join, socket) do
     broadcast_from!(socket, "userJoin", socket.assigns.user)
 
