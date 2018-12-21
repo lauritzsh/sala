@@ -5,12 +5,11 @@ jobs:
     docker:
       - image: bitwalker/alpine-elixir-phoenix:1.6.6
     steps:
-      - run: ls ~/.ssh
       - add_ssh_keys
-      - checkout
-      - run: ls ~/.ssh
       - run: apk update
       - run: apk add --no-cache yarn rsync openssh
+      - checkout
+      - run: ls ~/.ssh
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
       - run: ls ~/.ssh
       # - run:
