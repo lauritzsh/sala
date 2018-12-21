@@ -46,9 +46,8 @@ jobs:
         enabled: true
     working_directory: ~/code
     steps:
-      - checkout:
-          path: ~/code
-      - run: ls
+      - checkout
+      - run: ls api
       - run: sudo apt update
       - run: sudo apt install -y rsync
 
