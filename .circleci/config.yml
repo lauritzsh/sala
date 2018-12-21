@@ -33,10 +33,18 @@ jobs:
       - checkout:
           path: ~/code
 
+      - restore_cache:
+          key: dependency-cache-{{ checksum "mix.lock" }}
+
       - run:
           command: mix do deps.get, release
           environment:
             MIX_ENV: prod
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "mix.lock" }}
+          paths:
+            - deps
 
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
       - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
