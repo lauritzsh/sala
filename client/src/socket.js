@@ -1,6 +1,10 @@
 import { Socket } from 'phoenix';
 
-const socket = new Socket('ws://localhost:4000/socket', {});
+const socketUrl = process.env.NODE_ENV === 'production'
+  ? 'ws:///socket'
+  : 'ws://localhost:4000/socket'
+
+const socket = new Socket(socketUrl, {});
 socket.connect();
 
 export default socket;
