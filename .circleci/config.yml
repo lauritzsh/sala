@@ -6,6 +6,8 @@ jobs:
       - image: node:10.4.1
     working_directory: ~/code/client
     steps:
+      - run: apt update
+      - run: apt install -y rsync
       - checkout:
           path: ~/code
 
