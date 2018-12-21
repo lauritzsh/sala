@@ -21,7 +21,7 @@ jobs:
             - node_modules
 
       - persist_to_workspace:
-          root: .
+          root: ~/client
           paths:
             - build
   build_server:
@@ -57,9 +57,10 @@ jobs:
       - run: ssh-keyscan $HOST >> ~/.ssh/known_hosts
 
       - attach_workspace:
-          at: /tmp/client
+          at: ~/client
 
       - run: ls
+      - run: ls ~
 
       ## Deploying server
       - run: rsync -va --delete api/_build/prod/rel/sala/releases/0.1.0/sala.tar.gz $CI_USER@$HOST:$OUT_DIR/server
