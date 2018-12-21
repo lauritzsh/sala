@@ -4,6 +4,7 @@ jobs:
   client:
     docker:
       - image: node:10.4.1
+    working_directory: ~/client
     steps:
       - checkout
       - run: cd client
