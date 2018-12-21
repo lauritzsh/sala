@@ -1,6 +1,11 @@
 version: 2
 
 jobs:
+  client:
+    docker:
+      - image: node:10.4.1
+    steps:
+      - run: echo 'hello'
   build:
     docker:
       - image: elixir:1.6.6
