@@ -27,7 +27,12 @@ const Input = ({ pushMessage, pushIsTyping }) => {
   );
 
   return (
-    <div style={{ padding: '1rem 1rem 1rem 0' }}>
+    <div
+      style={{
+        margin: '1rem 1rem 1rem 0',
+        boxShadow: 'rgba(0, 0, 0, 0.5) 0px 2px 5px'
+      }}
+    >
       <textarea
         style={{
           padding: '0.5rem',

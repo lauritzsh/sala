@@ -27,7 +27,14 @@ const Player = ({ url, style }) => {
   });
 
   return (
-    <div style={{ ...style, background: 'black', position: 'relative' }}>
+    <div
+      style={{
+        ...style,
+        background: 'black',
+        position: 'relative',
+        boxShadow: 'rgba(0, 0, 0, 0.75) 0px 3px 10px'
+      }}
+    >
       <ReactPlayer
         ref={playerRef}
         style={{ position: 'absolute' }}
