@@ -10,6 +10,7 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
   const [duration, setDuration] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [internalTimestamp, setInternalTimestamp] = useState(timestamp);
+  const [volume, setVolume] = useState(1);
 
   useEffect(
     () => {
@@ -24,6 +25,7 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
       ref={playerRef}
       style={{ position: 'absolute' }}
       url={url}
+      volume={volume}
       playing={isPlaying}
       width={'100%'}
       height={'100%'}
@@ -84,6 +86,22 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
             onChange={event => {
               const newTimestamp = parseFloat(event.target.value);
               setInternalTimestamp(newTimestamp);
+            }}
+          />
+        </div>
+        <div style={{ padding: '1rem' }}>
+          <input
+            style={{
+              width: '100%',
+            }}
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={event => {
+              const newVolume = parseFloat(event.target.value);
+              setVolume(newVolume);
             }}
           />
         </div>
