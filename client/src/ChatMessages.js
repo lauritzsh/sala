@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 
 import Avatar from './Avatar';
 
@@ -28,7 +29,7 @@ const Message = ({ body, symbol, userId }) => (
   </div>
 );
 
-const Chat = ({ users, messages, bottomRef, style }) => {
+const ChatMessages = ({ users, messages, style }) => {
   if (!messages) {
     return <div />;
   }
@@ -40,12 +41,43 @@ const Chat = ({ users, messages, bottomRef, style }) => {
       return <Message key={i} body={body} symbol={symbol} userId={user_id} />;
     });
 
+  const bottomRef = useRef(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+
+  useEffect(
+    () => {
+      if (isAtBottom) {
+        bottomRef.current.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    },
+    [messages, isAtBottom]
+  );
+
   return (
-    <div style={style}>
+    <div
+      style={style}
+      onScroll={event => {
+        const { target } = event;
+        const { scrollHeight, scrollTop, clientHeight } = target;
+        setIsAtBottom(scrollHeight - scrollTop === clientHeight);
+      }}
+    >
       <Messages />
       <div ref={bottomRef} />
     </div>
   );
 };
 
-export default Chat;
+const mapStateToProps = state => ({
+  users: state.users,
+  messages: state.chat
+});
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChatMessages);

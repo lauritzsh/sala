@@ -1,32 +1,44 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
 
-import RoomChannel from './ChatService';
+import room from './ducks/room';
 
-const Player = ({ style }) => {
+const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
   const playerRef = useRef(null);
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [timestamp, setTimestamp] = useState(0);
-  const [url, setUrl] = useState(null);
+  const [duration, setDuration] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [internalTimestamp, setInternalTimestamp] = useState(timestamp);
 
-  function handleIsPlaying({ isPlaying }) {
-    setIsPlaying(isPlaying);
-  }
+  useEffect(
+    () => {
+      setInternalTimestamp(timestamp);
+      playerRef.current.seekTo(timestamp);
+    },
+    [timestamp],
+  );
 
-  function handleSeek({ timestamp: newTimestamp }) {
-    setTimestamp(newTimestamp);
-    playerRef.current.seekTo(newTimestamp);
-  }
-
-  useEffect(() => {
-    RoomChannel.onPlay(handleIsPlaying)
-      .onSeek(handleSeek)
-      .onNewVideo(function handleNewVideo(video) {
-        console.log('Got new video', video);
-        setUrl(video.url);
-      });
-  });
+  const player = (
+    <ReactPlayer
+      ref={playerRef}
+      style={{ position: 'absolute' }}
+      url={url}
+      playing={isPlaying}
+      width={'100%'}
+      height={'100%'}
+      onReady={player => {
+        setDuration(player.getDuration());
+        setIsReady(true);
+      }}
+      onProgress={progress => {
+        setInternalTimestamp(progress.playedSeconds);
+      }}
+      onEnded={() => {
+        onTogglePlay(false);
+      }}
+    />
+  );
 
   const controls = (
     <div
@@ -36,25 +48,29 @@ const Player = ({ style }) => {
         position: 'absolute',
         width: '100%',
         height: '100%',
-        padding: '1rem'
+        padding: '1rem',
       }}
     >
       <div style={{ flex: '1' }} />
       <div>
-        <button onClick={() => RoomChannel.pushIsPlaying(!isPlaying)}>
+        <button
+          onClick={() => {
+            onTogglePlay(!isPlaying);
+          }}
+        >
           {isPlaying ? 'Pause' : 'Play'}
         </button>
         <input
           type="range"
           min="0"
-          max="1"
-          step="0.01"
-          value={timestamp}
+          max={duration}
+          value={internalTimestamp}
           onMouseUp={() => {
-            RoomChannel.pushSeek(timestamp);
+            onSeek(internalTimestamp);
           }}
           onChange={event => {
-            setTimestamp(parseFloat(event.target.value));
+            const newTimestamp = parseFloat(event.target.value);
+            setInternalTimestamp(newTimestamp);
           }}
         />
       </div>
@@ -67,26 +83,27 @@ const Player = ({ style }) => {
         ...style,
         background: 'black',
         position: 'relative',
-        boxShadow: 'rgba(0, 0, 0, 0.75) 0px 3px 10px'
+        boxShadow: 'rgba(0, 0, 0, 0.75) 0px 3px 10px',
       }}
     >
-      <ReactPlayer
-        ref={playerRef}
-        style={{ position: 'absolute' }}
-        url={url}
-        playing={isPlaying}
-        width={'100%'}
-        height={'100%'}
-        onProgress={progress => {
-          setTimestamp(progress.played);
-        }}
-        onEnded={() => {
-          setIsPlaying(false);
-        }}
-      />
-      {url ? controls : <div />}
+      {player}
+      {isReady && controls}
     </div>
   );
 };
 
-export default Player;
+const mapStateToProps = state => ({
+  url: state.player.video_id,
+  isPlaying: state.player.playing,
+  timestamp: state.player.current_time,
+});
+
+const mapDispatchToProps = {
+  onTogglePlay: room.actions.pushTogglePlay,
+  onSeek: room.actions.pushSeek,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Player);

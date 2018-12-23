@@ -1,65 +1,24 @@
-import React, { useEffect, useReducer } from 'react';
-import produce from 'immer';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 
-import RoomChannel from './ChatService';
+import room from './ducks/room';
+
 import Chat from './Chat';
 import Player from './Player';
 
-const reducer = produce((draft, action) => {
-  switch (action.type) {
-    case 'JOIN_REQUEST':
-      draft.isLoading = true;
-      draft.error = null;
-      return;
-
-    case 'JOIN_SUCCESS':
-      return { ...action.payload, isLoading: false, error: null };
-
-    case 'JOIN_FAILURE':
-      draft.isLoading = false;
-      draft.error = action.payload;
-      return;
-
-    case 'LEAVE':
-      return;
-
-    default:
-      return;
-  }
-});
-
-const Room = ({ name }) => {
-  const [state, dispatch] = useReducer(reducer, { isLoading: true });
-
+const Room = ({ name, onCreateConnection, isConnected, users, chat }) => {
   useEffect(
     () => {
       document.title = `#${name}`;
 
-      dispatch({ type: 'JOIN_REQUEST' });
-
-      RoomChannel.join(name, {
-        onSuccess(room) {
-          dispatch({ type: 'JOIN_SUCCESS', payload: room });
-        },
-        onError(error) {
-          dispatch({ type: 'JOIN_FAILURE', payload: error });
-          console.error('No bueno:', error);
-        }
-      });
-
-      return () => {
-        dispatch({ type: 'LEAVE' });
-        RoomChannel.unsubscribe();
-      };
+      onCreateConnection(name);
     },
     [name]
   );
 
-  if (state.isLoading) {
-    return <div>Loading...</div>;
+  if (!isConnected) {
+    return <div />;
   }
-
-  console.log(state);
 
   return (
     <div
@@ -72,9 +31,22 @@ const Room = ({ name }) => {
       }}
     >
       <Player style={{ margin: '1rem' }} />
-      <Chat initialChat={state.chat} initialUsers={state.users} />
+      <Chat initialChat={chat} initialUsers={users} />
     </div>
   );
 };
 
-export default Room;
+const mapStateToProps = state => ({
+  chat: [],
+  users: [],
+  isConnected: state.isConnected
+});
+
+const mapDispatchToProps = dispatch => ({
+  onCreateConnection: name => dispatch(room.actions.connectRoomRequest(name))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Room);

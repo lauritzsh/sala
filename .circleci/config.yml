@@ -70,10 +70,8 @@ jobs:
       - attach_workspace:
           at: /tmp
 
-      - run: ls
       - run: mkdir server
       - run: tar xvzf sala.tar.gz -C server
-      - run: ls
 
       ## Deploying server
       - run: rsync -va --delete server/* $CI_USER@$HOST:$OUT_DIR/server

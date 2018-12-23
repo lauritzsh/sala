@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 
-import RoomChannel from './ChatService';
+import room from './ducks/room';
 
-const VideoInput = () => {
-  const [url, setUrl] = useState('');
+const VideoInput = ({ url, onNewVideo }) => {
+  console.log(url);
 
   return (
     <div style={{ marginTop: '1rem', marginRight: '1rem' }}>
       <input
+        type="text"
         placeholder="https://www.youtube.com/watch?v=pP44EPBMb8A"
         style={{
           width: '100%',
@@ -16,18 +18,30 @@ const VideoInput = () => {
           border: 'none',
           outline: 'none',
           color: 'white',
-          borderBottom: '1px solid rgb(61, 72, 82)'
+          borderBottom: '1px solid rgb(61, 72, 82)',
         }}
         value={url}
         onChange={event => {
-          const newUrl = event.target.value;
+          const newUrl = event.target.value.trim();
 
-          setUrl(newUrl);
-          RoomChannel.pushNewVideo(newUrl);
+          if (newUrl !== '') {
+            onNewVideo(newUrl);
+          }
         }}
       />
     </div>
   );
 };
 
-export default VideoInput;
+const mapStateToProps = state => ({
+  url: state.player.video_id,
+});
+
+const mapDispatchToProps = {
+  onNewVideo: room.actions.pushNewVideo,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(VideoInput);

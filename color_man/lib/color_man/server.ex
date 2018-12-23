@@ -1,9 +1,8 @@
 defmodule ColorMan.Server do
   use GenServer
 
-  @colors [
-    "🐶", "🐱", "🐭", "🐹", "🐰"
-] 
+  @colors ~w(🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵)
+
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)

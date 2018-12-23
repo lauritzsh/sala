@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import Avatar from './Avatar';
 
@@ -22,4 +23,8 @@ const RoomStatus = ({ users }) => {
   );
 };
 
-export default RoomStatus;
+const mapStateToProps = state => ({
+  users: state.users
+});
+
+export default connect(mapStateToProps)(RoomStatus);

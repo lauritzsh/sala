@@ -32,8 +32,16 @@ defmodule Room.Server do
     GenServer.call(room_server, {:leave, user})
   end
 
-  def play(room_server) do
-    GenServer.cast(room_server, :play)
+  def seek(room_server, timestamp) do
+    GenServer.call(room_server, {:seek, timestamp})
+  end
+
+  def new_video(room_server, video_url) do
+    GenServer.call(room_server, {:new_video, video_url})
+  end
+
+  def play(room_server, playing?) do
+    GenServer.cast(room_server, {:play, playing?})
   end
 
   defp global_name(name) do
@@ -80,8 +88,24 @@ defmodule Room.Server do
   end
 
   @impl true
-  def handle_cast(:play, room) do
-    new_player = Player.play(room.player)
+  def handle_call({:seek, timestamp}, _from, room) do
+    new_player = Player.seek(room.player, timestamp)
+    new_state = %{room | player: new_player }
+
+    {:reply, new_state, new_state, @expires_in}
+  end
+
+  @impl true
+  def handle_call({:new_video, video_url}, _from, room) do
+    new_player = Player.url(room.player, video_url)
+    new_state = %{room | player: new_player }
+
+    {:reply, new_state, new_state, @expires_in}
+  end
+
+  @impl true
+  def handle_cast({:play, playing?}, room) do
+    new_player = Player.play(room.player, playing?)
     new_state = %{room | player: new_player}
 
     {:noreply, new_state, @expires_in}

@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 
-const Input = ({ pushMessage, pushIsTyping }) => {
+import room from './ducks/room';
+
+function useIsTyping(text) {}
+
+const Input = ({ onMessage, onIsTyping }) => {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
@@ -8,13 +13,13 @@ const Input = ({ pushMessage, pushIsTyping }) => {
     () => {
       if (text) {
         if (!isTyping) {
-          pushIsTyping(true);
+          onIsTyping(true);
         }
 
         setIsTyping(true);
 
         const tid = setTimeout(() => {
-          pushIsTyping(false);
+          onIsTyping(false);
           setIsTyping(false);
         }, 3000);
 
@@ -53,8 +58,8 @@ const Input = ({ pushMessage, pushIsTyping }) => {
           if (event.key === 'Enter' && body !== '') {
             event.preventDefault();
 
-            pushMessage(body);
-            pushIsTyping(false);
+            onMessage(body);
+            onIsTyping(false);
 
             setText('');
             setIsTyping(false);
@@ -65,4 +70,14 @@ const Input = ({ pushMessage, pushIsTyping }) => {
   );
 };
 
-export default Input;
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = dispatch => ({
+  onMessage: body => dispatch(room.actions.pushMessage(body)),
+  onIsTyping: isTyping => dispatch(room.actions.pushIsTyping(isTyping))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Input);

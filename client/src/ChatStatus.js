@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import room from './ducks/room';
 
 import Avatar from './Avatar';
 
@@ -27,4 +30,8 @@ const ChatStatus = ({ users }) => {
   );
 };
 
-export default ChatStatus;
+const mapStateToProps = state => ({
+  users: room.selectors.usersTyping(state)
+});
+
+export default connect(mapStateToProps)(ChatStatus);
