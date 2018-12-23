@@ -48,31 +48,45 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
         position: 'absolute',
         width: '100%',
         height: '100%',
-        padding: '1rem',
       }}
     >
-      <div style={{ flex: '1' }} />
-      <div>
-        <button
-          onClick={() => {
-            onTogglePlay(!isPlaying);
-          }}
-        >
-          {isPlaying ? 'Pause' : 'Play'}
-        </button>
-        <input
-          type="range"
-          min="0"
-          max={duration}
-          value={internalTimestamp}
-          onMouseUp={() => {
-            onSeek(internalTimestamp);
-          }}
-          onChange={event => {
-            const newTimestamp = parseFloat(event.target.value);
-            setInternalTimestamp(newTimestamp);
-          }}
-        />
+      <div
+        style={{ flex: '1' }}
+        onClick={() => {
+          onTogglePlay(!isPlaying);
+        }}
+      />
+      <div style={{ display: 'flex' }}>
+        <div style={{ padding: '1rem' }}>
+          <button
+            style={{
+              width: '4rem',
+            }}
+            onClick={() => {
+              onTogglePlay(!isPlaying);
+            }}
+          >
+            {isPlaying ? 'Pause' : 'Play'}
+          </button>
+        </div>
+        <div style={{ flex: '1', padding: '1rem' }}>
+          <input
+            style={{
+              width: '100%',
+            }}
+            type="range"
+            min="0"
+            max={duration}
+            value={internalTimestamp}
+            onMouseUp={() => {
+              onSeek(internalTimestamp);
+            }}
+            onChange={event => {
+              const newTimestamp = parseFloat(event.target.value);
+              setInternalTimestamp(newTimestamp);
+            }}
+          />
+        </div>
       </div>
     </div>
   );
