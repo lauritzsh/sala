@@ -2,3 +2,12 @@ body {
   background: #22292f;
   color: white;
 }
+
+.controls {
+  transition: opacity 0.25s linear;
+  opacity: 0;
+}
+
+.controls:hover {
+  opacity: 1;
+}

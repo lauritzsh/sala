@@ -5,6 +5,46 @@ import InputRange from 'react-input-range';
 
 import room from './ducks/room';
 
+const PlayButton = () => (
+  <svg viewBox="0 0 20 20">
+    <g
+      id="Page-1"
+      stroke="none"
+      stroke-width="1"
+      fill="none"
+      fill-rule="evenodd"
+    >
+      <g id="icon-shape">
+        <polygon
+          id="Rectangle-161"
+          points="4 4 16 10 4 16"
+          style={{ fill: 'white' }}
+        />
+      </g>
+    </g>
+  </svg>
+);
+
+const PauseButton = () => (
+  <svg viewBox="0 0 20 20" width="2rem">
+    <g
+      id="Page-1"
+      stroke="none"
+      stroke-width="1"
+      fill="none"
+      fill-rule="evenodd"
+    >
+      <g id="icon-shape">
+        <path
+          d="M5,4 L8,4 L8,16 L5,16 L5,4 Z M12,4 L15,4 L15,16 L12,16 L12,4 Z"
+          id="Combined-Shape"
+          style={{ fill: 'white' }}
+        />
+      </g>
+    </g>
+  </svg>
+);
+
 const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
   const playerRef = useRef(null);
 
@@ -46,12 +86,15 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
 
   const controls = (
     <div
+      className="controls"
       style={{
         display: 'flex',
         flexDirection: 'column',
         position: 'absolute',
         width: '100%',
         height: '100%',
+        background:
+          'linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 100%)',
       }}
     >
       <div
@@ -60,20 +103,16 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
           onTogglePlay(!isPlaying);
         }}
       />
-      <div style={{ display: 'flex' }}>
-        <div style={{ padding: '1rem' }}>
-          <button
-            style={{
-              width: '4rem',
-            }}
-            onClick={() => {
-              onTogglePlay(!isPlaying);
-            }}
-          >
-            {isPlaying ? 'Pause' : 'Play'}
-          </button>
+      <div style={{ display: 'flex', alignItems: 'center', margin: '1rem' }}>
+        <div
+          style={{ width: '2rem', cursor: 'pointer' }}
+          onClick={() => {
+            onTogglePlay(!isPlaying);
+          }}
+        >
+          {isPlaying ? <PauseButton /> : <PlayButton />}
         </div>
-        <div style={{ flex: '1', padding: '1rem' }}>
+        <div style={{ flex: '1', margin: '0 2rem' }}>
           <InputRange
             minValue={0}
             maxValue={duration}
@@ -83,7 +122,7 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
             onChange={setInternalTimestamp}
           />
         </div>
-        <div style={{ padding: '1rem', width: '8rem' }}>
+        <div style={{ width: '8rem', marginRight: '1rem' }}>
           <InputRange
             minValue={0}
             maxValue={1}
