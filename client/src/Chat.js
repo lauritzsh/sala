@@ -18,7 +18,7 @@ const Chat = () => {
         gridTemplateRows: 'auto 6rem 1fr 2rem 6rem',
       }}
     >
-      <VideoInput />
+      <VideoInput style={{ marginTop: '1rem', marginRight: '1rem' }} />
       <RoomStatus />
       <ChatMessages style={{ overflow: 'auto', paddingRight: '1rem' }} />
       <ChatStatus />
