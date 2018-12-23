@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useReducer } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import produce from 'immer';
 
 import room from './ducks/room';
 
@@ -10,13 +9,13 @@ import Input from './Input';
 import RoomStatus from './RoomStatus';
 import VideoInput from './VideoInput';
 
-const Chat = ({ chat }) => {
+const Chat = () => {
   return (
     <div
       style={{
         minHeight: 0,
         display: 'grid',
-        gridTemplateRows: 'auto 6rem 1fr 2rem 6rem'
+        gridTemplateRows: 'auto 6rem 1fr 2rem 6rem',
       }}
     >
       <VideoInput />
@@ -28,14 +27,14 @@ const Chat = ({ chat }) => {
   );
 };
 
-const mapStateToProps = state => ({ chat: state.chat });
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
   addUser: user => dispatch(room.actions.addUser(user)),
-  removeUser: userId => dispatch(room.actions.removeUser(userId))
+  removeUser: userId => dispatch(room.actions.removeUser(userId)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Chat);

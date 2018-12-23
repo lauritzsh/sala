@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import room from './ducks/room';
 
-function useIsTyping(text) {}
-
 const Input = ({ onMessage, onIsTyping }) => {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -28,14 +26,14 @@ const Input = ({ onMessage, onIsTyping }) => {
         };
       }
     },
-    [text]
+    [text],
   );
 
   return (
     <div
       style={{
         margin: '1rem 1rem 1rem 0',
-        boxShadow: 'rgba(0, 0, 0, 0.5) 0px 2px 5px'
+        boxShadow: 'rgba(0, 0, 0, 0.5) 0px 2px 5px',
       }}
     >
       <textarea
@@ -47,7 +45,7 @@ const Input = ({ onMessage, onIsTyping }) => {
           border: 'none',
           resize: 'none',
           background: '#3D4852',
-          color: 'white'
+          color: 'white',
         }}
         autoFocus
         value={text}
@@ -74,10 +72,10 @@ const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
   onMessage: body => dispatch(room.actions.pushMessage(body)),
-  onIsTyping: isTyping => dispatch(room.actions.pushIsTyping(isTyping))
+  onIsTyping: isTyping => dispatch(room.actions.pushIsTyping(isTyping)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Input);
