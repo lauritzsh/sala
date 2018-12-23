@@ -50,6 +50,8 @@ defmodule Room.Server do
 
   @impl true
   def init(name) do
+    :timer.send_interval(:timer.seconds(1), self(), :progress)
+    
     {:ok, Room.new(name), @expires_in}
   end
 
@@ -116,6 +118,19 @@ defmodule Room.Server do
     Logger.info("#{room.name} was idle for #{@expires_in / 1000} seconds; shutting down.")
 
     {:stop, :normal, room}
+  end
+
+  @impl true
+  def handle_info(:progress, %{player: %{playing: true}} = room) do
+    new_player = Map.update!(room.player, :current_time, &(&1 + 1))
+    new_state = %{room | player: new_player}
+
+    {:noreply, new_state, @expires_in}
+  end
+
+  @impl true
+  def handle_info(:progress, state) do
+    {:noreply, state}
   end
 
   @impl true
