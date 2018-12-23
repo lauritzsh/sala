@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
+import InputRange from 'react-input-range';
 
 import room from './ducks/room';
 
@@ -73,37 +74,23 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
           </button>
         </div>
         <div style={{ flex: '1', padding: '1rem' }}>
-          <input
-            style={{
-              width: '100%',
-            }}
-            type="range"
-            min="0"
-            max={duration}
+          <InputRange
+            minValue={0}
+            maxValue={duration}
             value={internalTimestamp}
-            onMouseUp={() => {
-              onSeek(internalTimestamp);
-            }}
-            onChange={event => {
-              const newTimestamp = parseFloat(event.target.value);
-              setInternalTimestamp(newTimestamp);
-            }}
+            formatLabel={value => ''}
+            onChangeComplete={onSeek}
+            onChange={setInternalTimestamp}
           />
         </div>
-        <div style={{ padding: '1rem' }}>
-          <input
-            style={{
-              width: '100%',
-            }}
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
+        <div style={{ padding: '1rem', width: '8rem' }}>
+          <InputRange
+            minValue={0}
+            maxValue={1}
+            step={0.01}
             value={volume}
-            onChange={event => {
-              const newVolume = parseFloat(event.target.value);
-              setVolume(newVolume);
-            }}
+            formatLabel={value => ''}
+            onChange={setVolume}
           />
         </div>
       </div>
