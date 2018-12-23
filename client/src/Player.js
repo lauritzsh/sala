@@ -23,6 +23,7 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
   const player = (
     <ReactPlayer
       ref={playerRef}
+      youtubeConfig={{ playerVars: { start: timestamp } }}
       style={{ position: 'absolute' }}
       url={url}
       volume={volume}
