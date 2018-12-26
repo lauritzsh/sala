@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import posed, { PoseGroup } from 'react-pose';
 import { connect } from 'react-redux';
 
 import Avatar from './Avatar';
+
+const Jump = posed.div({
+  enter: { y: 0, opacity: 1 },
+  exit: { y: 10, opacity: 0 },
+});
 
 const userToSymbol = (userId, users) => {
   const user = users.find(u => u.id === userId);
@@ -20,7 +26,7 @@ const Message = ({ body, symbol, userId }) => (
       style={{
         display: 'flex',
         width: '1rem',
-        alignItems: 'center'
+        alignItems: 'center',
       }}
     >
       {symbol ? <Avatar symbol={symbol} /> : <Avatar left />}
@@ -34,12 +40,15 @@ const ChatMessages = ({ users, messages, style }) => {
     return <div />;
   }
 
-  const Messages = () =>
-    messages.map(({ user_id, body }, i) => {
-      const symbol = userToSymbol(user_id, users);
+  const _messages = messages.map(({ user_id, body }, i) => {
+    const symbol = userToSymbol(user_id, users);
 
-      return <Message key={i} body={body} symbol={symbol} userId={user_id} />;
-    });
+    return (
+      <Jump key={i}>
+        <Message body={body} symbol={symbol} userId={user_id} />
+      </Jump>
+    );
+  });
 
   const bottomRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -48,11 +57,11 @@ const ChatMessages = ({ users, messages, style }) => {
     () => {
       if (isAtBottom) {
         bottomRef.current.scrollIntoView({
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     },
-    [messages, isAtBottom]
+    [messages, isAtBottom],
   );
 
   return (
@@ -64,7 +73,7 @@ const ChatMessages = ({ users, messages, style }) => {
         setIsAtBottom(scrollHeight - scrollTop === clientHeight);
       }}
     >
-      <Messages />
+      <PoseGroup>{_messages}</PoseGroup>
       <div ref={bottomRef} />
     </div>
   );
@@ -72,12 +81,12 @@ const ChatMessages = ({ users, messages, style }) => {
 
 const mapStateToProps = state => ({
   users: state.users,
-  messages: state.chat
+  messages: state.chat,
 });
 
 const mapDispatchToProps = dispatch => ({});
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ChatMessages);
