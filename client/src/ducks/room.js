@@ -89,7 +89,9 @@ const selectors = {
   usersTyping: createSelector(
     ['users', 'usersTyping'],
     (users, usersTyping) =>
-      users.map(u => ({ ...u, isTyping: usersTyping[u.id] })),
+      users
+        .map(u => ({ ...u, isTyping: usersTyping[u.id] }))
+        .filter(u => u.isTyping),
   ),
 };
 
