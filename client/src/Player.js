@@ -7,13 +7,7 @@ import room from './ducks/room';
 
 const PlayButton = () => (
   <svg viewBox="0 0 20 20">
-    <g
-      id="Page-1"
-      stroke="none"
-      stroke-width="1"
-      fill="none"
-      fill-rule="evenodd"
-    >
+    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="icon-shape">
         <polygon
           id="Rectangle-161"
@@ -27,13 +21,7 @@ const PlayButton = () => (
 
 const PauseButton = () => (
   <svg viewBox="0 0 20 20" width="2rem">
-    <g
-      id="Page-1"
-      stroke="none"
-      stroke-width="1"
-      fill="none"
-      fill-rule="evenodd"
-    >
+    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="icon-shape">
         <path
           d="M5,4 L8,4 L8,16 L5,16 L5,4 Z M12,4 L15,4 L15,16 L12,16 L12,4 Z"
@@ -48,7 +36,7 @@ const PauseButton = () => (
 const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
   const playerRef = useRef(null);
 
-  const [duration, setDuration] = useState(0);
+  const [duration, setDuration] = useState(null);
   const [isReady, setIsReady] = useState(false);
   const [internalTimestamp, setInternalTimestamp] = useState(timestamp);
   const [volume, setVolume] = useState(1);
@@ -64,7 +52,11 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
   const player = (
     <ReactPlayer
       ref={playerRef}
-      youtubeConfig={{ playerVars: { start: timestamp } }}
+      config={{
+        youtube: {
+          playerVars: { start: timestamp },
+        },
+      }}
       style={{ position: 'absolute' }}
       url={url}
       volume={volume}
@@ -84,7 +76,7 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
     />
   );
 
-  const controls = (
+  const controls = isReady && (
     <div
       className="controls"
       style={{
@@ -146,7 +138,7 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
       }}
     >
       {player}
-      {isReady && controls}
+      {controls}
     </div>
   );
 };
