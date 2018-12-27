@@ -1,4 +1,4 @@
-defmodule Chat.Message do
+defmodule Room.Chat.Message do
   @derive Jason.Encoder
   defstruct user_id: nil, body: nil
 

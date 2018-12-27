@@ -1,6 +1,5 @@
 defmodule Room do
-
-  alias Room.User
+  alias Room.{Chat, Player, User}
 
   @derive Jason.Encoder
   defstruct name: nil, users: [], chat: Chat.new(), player: Player.new()
@@ -11,7 +10,7 @@ defmodule Room do
 
   def join(%__MODULE__{users: users} = room, %User{} = new_user) do
     new_users = [new_user | users]
-    
+
     %__MODULE__{room | users: new_users}
   end
 

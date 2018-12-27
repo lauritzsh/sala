@@ -1,4 +1,4 @@
-defmodule Player do
+defmodule Room.Player do
   @derive Jason.Encoder
   defstruct video_id: "", playing: false, current_time: 0
 

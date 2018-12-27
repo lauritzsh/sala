@@ -1,6 +1,6 @@
 defmodule SalaWeb.RoomChannel do
   require Logger
-  
+
   use Phoenix.Channel
 
   def join("room:" <> name, _message, socket) do
@@ -9,12 +9,13 @@ defmodule SalaWeb.RoomChannel do
     user = Room.Server.join(room_pid)
     room = Room.Server.get(room_pid)
 
-    socket = socket
+    socket =
+      socket
       |> assign(:user, user)
       |> assign(:room_pid, room_pid)
 
     send(self(), :after_join)
-    
+
     {:ok, room, socket}
   end
 
@@ -23,7 +24,7 @@ defmodule SalaWeb.RoomChannel do
 
     Room.Server.leave(room_pid, user)
     broadcast_from!(socket, "USER_LEAVE", %{userId: user.id})
-    
+
     :stop
   end
 
@@ -37,7 +38,7 @@ defmodule SalaWeb.RoomChannel do
     message = Room.Server.add_message(room_pid, user.id, body)
 
     broadcast!(socket, "NEW_MESSAGE", message)
-    
+
     {:noreply, socket}
   end
 
@@ -72,8 +73,8 @@ defmodule SalaWeb.RoomChannel do
   end
 
   def handle_in(message, params, socket) do
-    Logger.warn "Got unknown message #{inspect message} with #{inspect params}"
-    
+    Logger.warn("Got unknown message #{inspect(message)} with #{inspect(params)}")
+
     {:noreply, socket}
   end
 

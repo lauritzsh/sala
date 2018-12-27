@@ -5,15 +5,10 @@ defmodule Room.Server do
 
   @expires_in 10 * 60 * 1000
 
+  alias Room.{Avatar, Chat, Player}
+
   def start_link(name) do
     GenServer.start_link(__MODULE__, name, name: global_name(name))
-  end
-
-  def where_is(name) do
-    case :global.whereis_name({__MODULE__, name}) do
-      :undefined -> nil
-      pid -> pid
-    end
   end
 
   def get(room_server) do
@@ -51,14 +46,14 @@ defmodule Room.Server do
   @impl true
   def init(name) do
     :timer.send_interval(:timer.seconds(1), self(), :progress)
-    
+
     {:ok, Room.new(name), @expires_in}
   end
 
   @impl true
   def handle_call(:get, _from, state) do
-    room = %{state | chat: state.chat |> Enum.reverse() }
-    
+    room = %{state | chat: state.chat |> Enum.reverse()}
+
     {:reply, room, state, @expires_in}
   end
 
@@ -67,14 +62,14 @@ defmodule Room.Server do
     new_message = Chat.Message.new(user_id, body)
     new_chat = Chat.add_message(room.chat, new_message)
     new_room = %{room | chat: new_chat}
-    
+
     {:reply, new_message, new_room, @expires_in}
   end
 
   @impl true
   def handle_call(:join, _from, room) do
     user_id = Randomizer.randomizer(6)
-    user_symbol = ColorMan.Server.take()
+    user_symbol = Avatar.Server.take()
     new_user = Room.User.new(user_id, user_symbol)
     new_room = Room.join(room, new_user)
 
@@ -84,7 +79,7 @@ defmodule Room.Server do
   @impl true
   def handle_call({:leave, user}, _from, room) do
     new_room = Room.leave(room, user.id)
-    ColorMan.Server.give(user.symbol)
+    Avatar.Server.give(user.symbol)
 
     {:reply, new_room, new_room, @expires_in}
   end
@@ -92,7 +87,7 @@ defmodule Room.Server do
   @impl true
   def handle_call({:seek, timestamp}, _from, room) do
     new_player = Player.seek(room.player, timestamp)
-    new_state = %{room | player: new_player }
+    new_state = %{room | player: new_player}
 
     {:reply, new_state, new_state, @expires_in}
   end
@@ -100,7 +95,7 @@ defmodule Room.Server do
   @impl true
   def handle_call({:new_video, video_url}, _from, room) do
     new_player = Player.url(room.player, video_url)
-    new_state = %{room | player: new_player }
+    new_state = %{room | player: new_player}
 
     {:reply, new_state, new_state, @expires_in}
   end

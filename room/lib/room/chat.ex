@@ -1,6 +1,6 @@
-defmodule Chat do
-  alias Chat.Message
-  
+defmodule Room.Chat do
+  alias Room.Chat.Message
+
   def new do
     []
   end
