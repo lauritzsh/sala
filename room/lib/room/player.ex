@@ -1,24 +1,29 @@
 defmodule Room.Player do
-  @derive Jason.Encoder
-  defstruct video_id: "", playing: false, current_time: 0
+  alias Room.Player
 
-  def new() do
-    %__MODULE__{}
+  defp global_name(name), do: Player.Server.global_name(name)
+
+  def get(name) do
+    GenServer.call(global_name(name), :get)
   end
 
-  def play(%__MODULE__{} = player, playing?) do
-    %__MODULE__{player | playing: playing?}
+  def play(name) do
+    GenServer.cast(global_name(name), :play)
+    name
   end
 
-  def progress(%__MODULE__{} = player) do
-    %__MODULE__{player | current_time: player.current_time + 1}
+  def pause(name) do
+    GenServer.cast(global_name(name), :pause)
+    name
   end
 
-  def seek(%__MODULE__{} = player, to) do
-    %__MODULE__{player | current_time: to}
+  def new_video(name, url) do
+    GenServer.cast(global_name(name), {:new_video, url})
+    name
   end
 
-  def url(%__MODULE__{} = player, url) do
-    %__MODULE__{player | video_id: url}
+  def seek(name, timestamp) do
+    GenServer.cast(global_name(name), {:seek, timestamp})
+    name
   end
 end

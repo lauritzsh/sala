@@ -11,3 +11,12 @@ body {
 .controls:hover {
   opacity: 1;
 }
+
+.chat-message {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.chat-message:last-of-type {
+  margin-bottom: 0;
+}

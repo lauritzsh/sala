@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
 import InputRange from 'react-input-range';
-
-import room from './ducks/room';
 
 const PlayButton = () => (
   <svg viewBox="0 0 20 20">
@@ -33,7 +30,15 @@ const PauseButton = () => (
   </svg>
 );
 
-const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
+export default ({
+  url,
+  isPlaying,
+  timestamp,
+  onPlay,
+  onPause,
+  onSeek,
+  style,
+}) => {
   const playerRef = useRef(null);
 
   const [duration, setDuration] = useState(null);
@@ -71,7 +76,7 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
         setInternalTimestamp(progress.playedSeconds);
       }}
       onEnded={() => {
-        onTogglePlay(false);
+        onPause();
       }}
     />
   );
@@ -92,14 +97,14 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
       <div
         style={{ flex: '1' }}
         onClick={() => {
-          onTogglePlay(!isPlaying);
+          isPlaying ? onPause() : onPlay();
         }}
       />
       <div style={{ display: 'flex', alignItems: 'center', margin: '1rem' }}>
         <div
           style={{ width: '2rem', cursor: 'pointer' }}
           onClick={() => {
-            onTogglePlay(!isPlaying);
+            isPlaying ? onPause() : onPlay();
           }}
         >
           {isPlaying ? <PauseButton /> : <PlayButton />}
@@ -142,19 +147,3 @@ const Player = ({ url, isPlaying, timestamp, onTogglePlay, onSeek, style }) => {
     </div>
   );
 };
-
-const mapStateToProps = state => ({
-  url: state.player.video_id,
-  isPlaying: state.player.playing,
-  timestamp: state.player.current_time,
-});
-
-const mapDispatchToProps = {
-  onTogglePlay: room.actions.pushTogglePlay,
-  onSeek: room.actions.pushSeek,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Player);

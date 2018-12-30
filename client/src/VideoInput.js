@@ -1,43 +1,34 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
 
-import room from './ducks/room';
+import ReactPlayer from 'react-player';
 
-const VideoInput = ({ url, onNewVideo, style }) => (
-  <div style={style}>
-    <input
-      type="text"
-      placeholder="https://www.youtube.com/watch?v=pP44EPBMb8A"
-      style={{
-        width: '100%',
-        fontSize: '1.5rem',
-        background: 'transparent',
-        border: 'none',
-        outline: 'none',
-        color: 'white',
-        borderBottom: '1px solid rgb(61, 72, 82)',
-      }}
-      value={url}
-      onChange={event => {
-        const newUrl = event.target.value.trim();
+export default ({ url, onNewVideo, style }) => {
+  const [internalUrl, setInternalUrl] = useState(url);
 
-        if (newUrl !== '') {
-          onNewVideo(newUrl);
-        }
-      }}
-    />
-  </div>
-);
+  return (
+    <div style={style}>
+      <input
+        type="text"
+        placeholder="https://www.youtube.com/watch?v=pP44EPBMb8A"
+        style={{
+          width: '100%',
+          fontSize: '1.5rem',
+          background: 'transparent',
+          border: 'none',
+          outline: 'none',
+          color: 'white',
+          borderBottom: '1px solid rgb(61, 72, 82)',
+        }}
+        value={internalUrl}
+        onChange={event => {
+          const newUrl = event.target.value;
+          setInternalUrl(newUrl);
 
-const mapStateToProps = state => ({
-  url: state.player.video_id,
-});
-
-const mapDispatchToProps = {
-  onNewVideo: room.actions.pushNewVideo,
+          if (ReactPlayer.canPlay(newUrl)) {
+            onNewVideo(newUrl);
+          }
+        }}
+      />
+    </div>
+  );
 };
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(VideoInput);

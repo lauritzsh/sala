@@ -1,22 +1,57 @@
 defmodule Room do
-  alias Room.{Chat, Player, User}
-
-  @derive Jason.Encoder
-  defstruct name: nil, users: [], chat: Chat.new(), player: Player.new()
-
-  def new(name) do
-    %__MODULE__{name: name}
+  alias Room.{Chat, Player}
+  
+  def find_or_create(name) do
+    Room.DynamicSupervisor.find_or_create(name)
+    name
   end
 
-  def join(%__MODULE__{users: users} = room, %User{} = new_user) do
-    new_users = [new_user | users]
-
-    %__MODULE__{room | users: new_users}
+  def get(name) do
+    %{chat: chat(name), player: player(name)}
   end
 
-  def leave(%__MODULE__{users: users} = room, user_id) do
-    new_users = Enum.reject(users, fn user -> user.id == user_id end)
+  def chat(name) do
+    Chat.get(name)
+  end
+  
+  def join(name) do
+    Chat.join(name)
+  end
+  
+  def add_message(name, user_id, body) do
+    Chat.add_message(name, user_id, body)
+  end
 
-    %__MODULE__{room | users: new_users}
+  # TODO: is there a better place to put this logic?
+  def leave(name, user_id) do
+    users_left = name
+    |> Chat.leave(user_id)
+    |> Chat.count_users()
+
+    if users_left == 0 do
+      Player.pause(name)
+    end
+
+    name
+  end
+
+  def player(name) do
+    Player.get(name)
+  end
+
+  def play(name) do
+    Player.play(name)
+  end
+
+  def pause(name) do
+    Player.pause(name)
+  end
+
+  def seek(name, timestamp) do
+    Player.seek(name, timestamp)
+  end
+
+  def new_video(name, url) do
+    Player.new_video(name, url)
   end
 end

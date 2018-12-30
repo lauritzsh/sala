@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 
-import room from './ducks/room';
-
-const Input = ({ onMessage, onIsTyping }) => {
+export default ({ onAddMessage, onTyping }) => {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
@@ -11,13 +8,13 @@ const Input = ({ onMessage, onIsTyping }) => {
     () => {
       if (text) {
         if (!isTyping) {
-          onIsTyping(true);
+          onTyping(true);
         }
 
         setIsTyping(true);
 
         const tid = setTimeout(() => {
-          onIsTyping(false);
+          onTyping(false);
           setIsTyping(false);
         }, 3000);
 
@@ -32,7 +29,6 @@ const Input = ({ onMessage, onIsTyping }) => {
   return (
     <div
       style={{
-        margin: '1rem 1rem 1rem 0',
         boxShadow: 'rgba(0, 0, 0, 0.5) 0px 2px 5px',
       }}
     >
@@ -56,8 +52,8 @@ const Input = ({ onMessage, onIsTyping }) => {
           if (event.key === 'Enter' && body !== '') {
             event.preventDefault();
 
-            onMessage(body);
-            onIsTyping(false);
+            onAddMessage(body);
+            onTyping(false);
 
             setText('');
             setIsTyping(false);
@@ -67,15 +63,3 @@ const Input = ({ onMessage, onIsTyping }) => {
     </div>
   );
 };
-
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = dispatch => ({
-  onMessage: body => dispatch(room.actions.pushMessage(body)),
-  onIsTyping: isTyping => dispatch(room.actions.pushIsTyping(isTyping)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Input);

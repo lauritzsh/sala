@@ -1,8 +1,5 @@
 import React from 'react';
 import posed, { PoseGroup } from 'react-pose';
-import { connect } from 'react-redux';
-
-import room from './ducks/room';
 
 import Avatar from './Avatar';
 
@@ -11,7 +8,9 @@ const Fade = posed.div({
   exit: { opacity: 0 },
 });
 
-const ChatStatus = ({ users }) => {
+export default ({ users }) => {
+  console.log(users);
+
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <PoseGroup flipMove={false}>
@@ -29,9 +28,3 @@ const ChatStatus = ({ users }) => {
     </div>
   );
 };
-
-const mapStateToProps = state => ({
-  users: room.selectors.usersTyping(state),
-});
-
-export default connect(mapStateToProps)(ChatStatus);

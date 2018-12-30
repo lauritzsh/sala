@@ -5,7 +5,7 @@ defmodule Room.Application do
 
   def start(_type, _args) do
     children = [
-      Room.Cache
+      Room.DynamicSupervisor
     ]
 
     opts = [strategy: :one_for_one, name: Room.Supervisor]

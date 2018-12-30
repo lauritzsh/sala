@@ -4,15 +4,18 @@ defmodule SalaWeb.RoomChannel do
   use Phoenix.Channel
 
   def join("room:" <> name, _message, socket) do
-    room_pid = Room.Cache.find_room(name)
+    user = name
+    |> Room.find_or_create()
+    |> Room.join()
 
-    user = Room.Server.join(room_pid)
-    room = Room.Server.get(room_pid)
+    room = name
+    |> Room.pause()
+    |> Room.get()
 
     socket =
       socket
+      |> assign(:name, name)
       |> assign(:user, user)
-      |> assign(:room_pid, room_pid)
 
     send(self(), :after_join)
 
@@ -20,54 +23,59 @@ defmodule SalaWeb.RoomChannel do
   end
 
   def terminate(_reason, socket) do
-    %{user: user, room_pid: room_pid} = socket.assigns
+    %{user: user, name: name} = socket.assigns
 
-    Room.Server.leave(room_pid, user)
-    broadcast_from!(socket, "USER_LEAVE", %{userId: user.id})
+    Room.leave(name, user.id)
+
+    broadcast_from!(socket, "CHAT_USER_LEAVE", %{userId: user.id})
 
     :stop
   end
 
-  def handle_in("NEW_MESSAGE", %{"body" => ""}, socket) do
-    {:noreply, socket}
-  end
+  def handle_in("CHAT_ADD_MESSAGE", %{"body" => body}, socket) do
+    %{user: user, name: name} = socket.assigns
 
-  def handle_in("NEW_MESSAGE", %{"body" => body}, socket) do
-    %{user: user, room_pid: room_pid} = socket.assigns
+    message = Room.add_message(name, user.id, body)
 
-    message = Room.Server.add_message(room_pid, user.id, body)
-
-    broadcast!(socket, "NEW_MESSAGE", message)
+    broadcast!(socket, "CHAT_ADD_MESSAGE", message)
 
     {:noreply, socket}
   end
 
-  def handle_in("USER_TYPING", %{"isTyping" => typing?}, socket) do
-    broadcast_from!(socket, "USER_TYPING", %{userId: socket.assigns.user.id, isTyping: typing?})
+  def handle_in("CHAT_USER_TYPING", %{"isTyping" => typing?}, socket) do
+    broadcast_from!(socket, "CHAT_USER_TYPING", %{userId: socket.assigns.user.id, isTyping: typing?})
 
     {:noreply, socket}
   end
 
-  def handle_in("VIDEO_PLAYING", %{"isPlaying" => playing?}, socket) do
-    broadcast!(socket, "VIDEO_PLAYING", %{isPlaying: playing?})
+  def handle_in("PLAYER_PLAY", _, socket) do
+    Room.play(socket.assigns.name)
 
-    Room.Server.play(socket.assigns.room_pid, playing?)
-
-    {:noreply, socket}
-  end
-
-  def handle_in("VIDEO_SEEK", %{"timestamp" => timestamp}, socket) do
-    broadcast!(socket, "VIDEO_SEEK", %{timestamp: timestamp})
-
-    Room.Server.seek(socket.assigns.room_pid, timestamp)
+    broadcast!(socket, "PLAYER_PLAY", %{})
 
     {:noreply, socket}
   end
 
-  def handle_in("NEW_VIDEO", %{"url" => url}, socket) do
-    broadcast!(socket, "NEW_VIDEO", %{url: url})
+  def handle_in("PLAYER_PAUSE", _, socket) do
+    Room.pause(socket.assigns.name)
 
-    Room.Server.new_video(socket.assigns.room_pid, url)
+    broadcast!(socket, "PLAYER_PAUSE", %{})
+
+    {:noreply, socket}
+  end
+
+  def handle_in("PLAYER_SEEK", %{"timestamp" => timestamp}, socket) do
+    Room.seek(socket.assigns.name, timestamp)
+
+    broadcast!(socket, "PLAYER_SEEK", %{timestamp: timestamp})
+
+    {:noreply, socket}
+  end
+
+  def handle_in("PLAYER_NEW_VIDEO", %{"url" => url}, socket) do
+    Room.new_video(socket.assigns.name, url)
+
+    broadcast!(socket, "PLAYER_NEW_VIDEO", %{url: url})
 
     {:noreply, socket}
   end
@@ -79,10 +87,8 @@ defmodule SalaWeb.RoomChannel do
   end
 
   def handle_info(:after_join, socket) do
-    Room.Server.play(socket.assigns.room_pid, false)
-
-    broadcast!(socket, "VIDEO_PLAYING", %{isPlaying: false})
-    broadcast_from!(socket, "USER_JOIN", socket.assigns.user)
+    broadcast_from!(socket, "PLAYER_PAUSE", %{})
+    broadcast_from!(socket, "CHAT_USER_JOIN", socket.assigns.user)
 
     {:noreply, socket}
   end

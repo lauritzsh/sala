@@ -1,40 +1,34 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-import room from './ducks/room';
 
 import ChatMessages from './ChatMessages';
 import ChatStatus from './ChatStatus';
-import Input from './Input';
-import RoomStatus from './RoomStatus';
-import VideoInput from './VideoInput';
+import ChatInput from './ChatInput';
 
-const Chat = () => {
+export default ({
+  messages,
+  users,
+  typingUsers,
+  onAddMessage,
+  onTyping,
+  style,
+}) => {
   return (
     <div
       style={{
+        ...style,
         minHeight: 0,
         display: 'grid',
-        gridTemplateRows: 'auto 6rem 1fr 2rem 6rem',
+        gridTemplateRows: '1fr 2rem 6rem',
+        gridGap: '1rem',
       }}
     >
-      <VideoInput style={{ marginTop: '1rem', marginRight: '1rem' }} />
-      <RoomStatus />
-      <ChatMessages style={{ overflow: 'auto', paddingRight: '1rem' }} />
-      <ChatStatus />
-      <Input />
+      <ChatMessages
+        style={{ overflow: 'auto' }}
+        messages={messages}
+        users={users}
+      />
+      <ChatStatus users={typingUsers} />
+      <ChatInput onAddMessage={onAddMessage} onTyping={onTyping} />
     </div>
   );
 };
-
-const mapStateToProps = state => ({});
-
-const mapDispatchToProps = dispatch => ({
-  addUser: user => dispatch(room.actions.addUser(user)),
-  removeUser: userId => dispatch(room.actions.removeUser(userId)),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Chat);

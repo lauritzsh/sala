@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import posed, { PoseGroup } from 'react-pose';
-import { connect } from 'react-redux';
 
 import Avatar from './Avatar';
 
@@ -20,7 +19,7 @@ const userToSymbol = (userId, users) => {
 };
 
 const Message = ({ body, symbol, userId }) => (
-  <div style={{ display: 'flex', marginBottom: '1rem' }}>
+  <>
     <div
       title={userId}
       style={{
@@ -32,10 +31,10 @@ const Message = ({ body, symbol, userId }) => (
       {symbol ? <Avatar symbol={symbol} /> : <Avatar left />}
     </div>
     <div style={{ flex: '1' }}>{body}</div>
-  </div>
+  </>
 );
 
-const ChatMessages = ({ users, messages, style }) => {
+export default ({ users, messages, style }) => {
   if (!messages) {
     return <div />;
   }
@@ -44,7 +43,7 @@ const ChatMessages = ({ users, messages, style }) => {
     const symbol = userToSymbol(user_id, users);
 
     return (
-      <Jump key={i}>
+      <Jump key={i} className="chat-message">
         <Message body={body} symbol={symbol} userId={user_id} />
       </Jump>
     );
@@ -73,20 +72,10 @@ const ChatMessages = ({ users, messages, style }) => {
         setIsAtBottom(scrollHeight - scrollTop === clientHeight);
       }}
     >
-      <PoseGroup>{_messages}</PoseGroup>
+      <div>
+        <PoseGroup>{_messages}</PoseGroup>
+      </div>
       <div ref={bottomRef} />
     </div>
   );
 };
-
-const mapStateToProps = state => ({
-  users: state.users,
-  messages: state.chat,
-});
-
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ChatMessages);

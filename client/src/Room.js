@@ -1,52 +1,59 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 
-import room from './ducks/room';
+import useChannel from './useChannel';
 
+import VideoInput from './VideoInput';
+import RoomStatus from './RoomStatus';
 import Chat from './Chat';
 import Player from './Player';
 
-const Room = ({ name, onCreateConnection, isConnected, users, chat }) => {
+export default ({ name }) => {
+  const [push, select] = useChannel(name);
+
   useEffect(
     () => {
       document.title = `#${name}`;
-
-      onCreateConnection(name);
     },
-    [name]
+    [name],
   );
 
-  if (!isConnected) {
+  if (!select.getIsConnected()) {
     return <div />;
   }
 
   return (
     <div
       style={{
+        padding: '1rem',
+        gridGap: '1rem',
         display: 'grid',
         gridTemplateColumns: '1fr 400px',
+        gridTemplateRows: 'auto 1fr',
         width: '100%',
         height: '100%',
-        position: 'absolute'
+        position: 'absolute',
       }}
     >
-      <Player style={{ margin: '1rem' }} />
-      <Chat initialChat={chat} initialUsers={users} />
+      <VideoInput
+        url={select.getUrl()}
+        onNewVideo={url => push.newVideo({ url })}
+      />
+      <RoomStatus users={select.getUsers()} />
+      <Player
+        url={select.getUrl()}
+        isPlaying={select.getIsPlaying()}
+        timestamp={select.getTimestamp()}
+        onPlay={push.play}
+        onPause={push.pause}
+        onSeek={timestamp => push.seek({ timestamp })}
+      />
+      <Chat
+        messages={select.getMessages()}
+        users={select.getUsers()}
+        typingUsers={select.getTypingUsers()}
+        onAddMessage={body => push.addMessage({ body })}
+        onTyping={isTyping => push.userTyping({ isTyping })}
+      />
     </div>
   );
 };
-
-const mapStateToProps = state => ({
-  chat: [],
-  users: [],
-  isConnected: state.isConnected
-});
-
-const mapDispatchToProps = dispatch => ({
-  onCreateConnection: name => dispatch(room.actions.connectRoomRequest(name))
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Room);

@@ -1,6 +1,5 @@
 import React from 'react';
 import posed, { PoseGroup } from 'react-pose';
-import { connect } from 'react-redux';
 
 import Avatar from './Avatar';
 
@@ -9,7 +8,7 @@ const Fade = posed.div({
   exit: { opacity: 0 },
 });
 
-const RoomStatus = ({ users }) => {
+export default ({ users }) => {
   return (
     <div
       style={{
@@ -28,9 +27,3 @@ const RoomStatus = ({ users }) => {
     </div>
   );
 };
-
-const mapStateToProps = state => ({
-  users: state.users,
-});
-
-export default connect(mapStateToProps)(RoomStatus);
