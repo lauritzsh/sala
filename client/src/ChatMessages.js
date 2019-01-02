@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import posed, { PoseGroup } from 'react-pose';
+import 'styled-components/macro';
 
 import Avatar from './Avatar';
 
@@ -22,32 +23,52 @@ const Message = ({ body, symbol, userId }) => (
   <>
     <div
       title={userId}
-      style={{
-        display: 'flex',
-        width: '1rem',
-        alignItems: 'center',
-      }}
+      css={`
+        display: flex;
+        width: 1rem;
+        align-items: center;
+      `}
     >
-      {symbol ? <Avatar symbol={symbol} /> : <Avatar left />}
+      {symbol ? <Avatar symbol={symbol} /> : <Avatar />}
     </div>
-    <div style={{ flex: '1' }}>{body}</div>
+    <div
+      css={`
+        flex: 1;
+      `}
+    >
+      {body}
+    </div>
   </>
 );
 
-export default ({ users, messages, style }) => {
+export default ({ users, messages }) => {
   if (!messages) {
     return <div />;
   }
 
-  const _messages = messages.map(({ user_id, body }, i) => {
-    const symbol = userToSymbol(user_id, users);
+  const Messages = () => (
+    <PoseGroup>
+      {messages.map(({ user_id, body }, i) => {
+        const symbol = userToSymbol(user_id, users);
 
-    return (
-      <Jump key={i} className="chat-message">
-        <Message body={body} symbol={symbol} userId={user_id} />
-      </Jump>
-    );
-  });
+        return (
+          <Jump
+            key={i}
+            css={`
+              display: flex;
+              margin-bottom: 0.5rem;
+
+              :last-of-type {
+                margin-bottom: 0;
+              }
+            `}
+          >
+            <Message body={body} symbol={symbol} userId={user_id} />
+          </Jump>
+        );
+      })}
+    </PoseGroup>
+  );
 
   const bottomRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
@@ -57,6 +78,8 @@ export default ({ users, messages, style }) => {
       if (isAtBottom) {
         bottomRef.current.scrollIntoView({
           behavior: 'smooth',
+          block: 'nearest',
+          inline: 'start',
         });
       }
     },
@@ -65,7 +88,13 @@ export default ({ users, messages, style }) => {
 
   return (
     <div
-      style={style}
+      css={`
+        overflow: hidden;
+
+        :hover {
+          overflow: auto;
+        }
+      `}
       onScroll={event => {
         const { target } = event;
         const { scrollHeight, scrollTop, clientHeight } = target;
@@ -73,7 +102,7 @@ export default ({ users, messages, style }) => {
       }}
     >
       <div>
-        <PoseGroup>{_messages}</PoseGroup>
+        <Messages />
       </div>
       <div ref={bottomRef} />
     </div>

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 
 import useChannel from './useChannel';
 
@@ -6,6 +7,17 @@ import VideoInput from './VideoInput';
 import RoomStatus from './RoomStatus';
 import Chat from './Chat';
 import Player from './Player';
+
+const Wrapper = styled.div`
+  padding: 1rem;
+  grid-gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  grid-template-rows: auto auto;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+`;
 
 export default ({ name }) => {
   const [push, select] = useChannel(name);
@@ -22,18 +34,7 @@ export default ({ name }) => {
   }
 
   return (
-    <div
-      style={{
-        padding: '1rem',
-        gridGap: '1rem',
-        display: 'grid',
-        gridTemplateColumns: '1fr 400px',
-        gridTemplateRows: 'auto 1fr',
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-      }}
-    >
+    <Wrapper>
       <VideoInput
         url={select.getUrl()}
         onNewVideo={url => push.newVideo({ url })}
@@ -54,6 +55,6 @@ export default ({ name }) => {
         onAddMessage={body => push.addMessage({ body })}
         onTyping={isTyping => push.userTyping({ isTyping })}
       />
-    </div>
+    </Wrapper>
   );
 };

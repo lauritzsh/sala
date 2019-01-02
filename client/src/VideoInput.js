@@ -1,34 +1,63 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
+import replace from './icons/replace.svg';
 import ReactPlayer from 'react-player';
 
-export default ({ url, onNewVideo, style }) => {
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  background: #3d4852;
+  padding: 0.5rem;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+
+  ::placeholder {
+    color: #8795a1;
+  }
+`;
+
+const Icon = styled.img`
+  transition: opacity 0.25s linear;
+  opacity: ${props => (props.isPlayable ? 1 : 0.25)};
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: ${props => (props.isPlayable ? 'pointer' : '')};
+`;
+
+export default ({ url, onNewVideo }) => {
   const [internalUrl, setInternalUrl] = useState(url);
 
+  const isPlayable = ReactPlayer.canPlay(internalUrl);
+
   return (
-    <div style={style}>
-      <input
+    <Wrapper>
+      <Input
         type="text"
         placeholder="https://www.youtube.com/watch?v=pP44EPBMb8A"
-        style={{
-          width: '100%',
-          fontSize: '1.5rem',
-          background: 'transparent',
-          border: 'none',
-          outline: 'none',
-          color: 'white',
-          borderBottom: '1px solid rgb(61, 72, 82)',
-        }}
         value={internalUrl}
         onChange={event => {
           const newUrl = event.target.value;
           setInternalUrl(newUrl);
-
-          if (ReactPlayer.canPlay(newUrl)) {
-            onNewVideo(newUrl);
+        }}
+      />
+      <Icon
+        src={replace}
+        title={isPlayable ? 'Play this video now' : 'Video is not valid'}
+        isPlayable={isPlayable}
+        onClick={() => {
+          if (isPlayable) {
+            onNewVideo(internalUrl);
           }
         }}
       />
-    </div>
+    </Wrapper>
   );
 };

@@ -1,34 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import InputRange from 'react-input-range';
+import styled from 'styled-components/macro';
 
-const PlayButton = () => (
-  <svg viewBox="0 0 20 20">
-    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g id="icon-shape">
-        <polygon
-          id="Rectangle-161"
-          points="4 4 16 10 4 16"
-          style={{ fill: 'white' }}
-        />
-      </g>
-    </g>
-  </svg>
-);
+import play from './icons/play.svg';
+import pause from './icons/pause.svg';
 
-const PauseButton = () => (
-  <svg viewBox="0 0 20 20" width="2rem">
-    <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-      <g id="icon-shape">
-        <path
-          d="M5,4 L8,4 L8,16 L5,16 L5,4 Z M12,4 L15,4 L15,16 L12,16 L12,4 Z"
-          id="Combined-Shape"
-          style={{ fill: 'white' }}
-        />
-      </g>
-    </g>
-  </svg>
-);
+const Icon = styled.img`
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+`;
+
+const Wrapper = styled.div`
+  background: black;
+  position: relative;
+`;
 
 export default ({
   url,
@@ -62,7 +50,9 @@ export default ({
           playerVars: { start: timestamp },
         },
       }}
-      style={{ position: 'absolute' }}
+      css={`
+        position: absolute;
+      `}
       url={url}
       volume={volume}
       playing={isPlaying}
@@ -83,49 +73,72 @@ export default ({
 
   const controls = isReady && (
     <div
-      className="controls"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        background:
-          'linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.1) 100%)',
-      }}
+      css={`
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(0, 0, 0, 0.1) 100%
+        );
+        transition: opacity 0.25s linear;
+        opacity: 0;
+
+        :hover {
+          opacity: 1;
+        }
+      `}
     >
       <div
-        style={{ flex: '1' }}
+        css={`
+          flex: 1;
+        `}
         onClick={() => {
           isPlaying ? onPause() : onPlay();
         }}
       />
-      <div style={{ display: 'flex', alignItems: 'center', margin: '1rem' }}>
+      <div css={`display: flex; align-items: center: margin: 1rem;`}>
         <div
-          style={{ width: '2rem', cursor: 'pointer' }}
+          css={`
+            width: 2rem;
+            cursor: pointer;
+          `}
           onClick={() => {
             isPlaying ? onPause() : onPlay();
           }}
         >
-          {isPlaying ? <PauseButton /> : <PlayButton />}
+          {isPlaying ? <Icon src={pause} /> : <Icon src={play} />}
         </div>
-        <div style={{ flex: '1', margin: '0 2rem' }}>
+        <div
+          css={`
+            flex: 1;
+            margin: 0 2rem;
+          `}
+        >
           <InputRange
             minValue={0}
             maxValue={duration}
             value={internalTimestamp}
-            formatLabel={value => ''}
+            formatLabel={() => ''}
             onChangeComplete={onSeek}
             onChange={setInternalTimestamp}
           />
         </div>
-        <div style={{ width: '8rem', marginRight: '1rem' }}>
+        <div
+          css={`
+            width: 8rem;
+            margin-right: 1rem;
+          `}
+        >
           <InputRange
             minValue={0}
             maxValue={1}
             step={0.01}
             value={volume}
-            formatLabel={value => ''}
+            formatLabel={() => ''}
             onChange={setVolume}
           />
         </div>
@@ -134,16 +147,9 @@ export default ({
   );
 
   return (
-    <div
-      style={{
-        ...style,
-        background: 'black',
-        position: 'relative',
-        boxShadow: 'rgba(0, 0, 0, 0.75) 0px 3px 10px',
-      }}
-    >
+    <Wrapper>
       {player}
       {controls}
-    </div>
+    </Wrapper>
   );
 };

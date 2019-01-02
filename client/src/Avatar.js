@@ -1,11 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
 
-const Avatar = ({ left, symbol, style, big, medium }) => (
-  <span
-    style={{ ...style, fontSize: big ? '2rem' : medium ? '1rem' : '0.5rem' }}
-  >
-    {left ? '' : symbol}
-  </span>
-);
+const Wrapper = styled.span`
+  font-size: ${props =>
+    props.big ? '2rem' : props.medium ? '1rem' : '0.5rem'};
+`;
 
-export default Avatar;
+export default ({ symbol, ...props }) => <Wrapper {...props}>{symbol}</Wrapper>;
