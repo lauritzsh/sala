@@ -96,6 +96,7 @@ export default () => (
               max-width: 100%;
               box-shadow: 0 5px 10px rgba(0, 0, 0, 0.75);
             `}
+            alt="Screenshot of a room"
             src={previewImage}
           />
         </div>
