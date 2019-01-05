@@ -100,7 +100,13 @@ export default ({
           isPlaying ? onPause() : onPlay();
         }}
       />
-      <div css={`display: flex; align-items: center: margin: 1rem;`}>
+      <div
+        css={`
+          display: flex;
+          align-items: center;
+          margin: 1rem;
+        `}
+      >
         <div
           css={`
             width: 2rem;
