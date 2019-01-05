@@ -1,8 +1,10 @@
 import React from 'react';
-import { Router, Redirect } from '@reach/router';
+import { Router } from '@reach/router';
 import { createGlobalStyle } from 'styled-components';
 import 'react-input-range/lib/css/index.css';
 
+import Home from './Home';
+import Privacy from './Privacy';
 import Room from './Room';
 
 const GlobalStyle = createGlobalStyle` 
@@ -24,16 +26,11 @@ const GlobalStyle = createGlobalStyle`
     background: #22292f;
     color: white;
   }
+
+  a {
+    color: white;
+  }
 `;
-
-// Might result in same id twice but unlikely
-const Home = () => {
-  const randomId = Math.random()
-    .toString(36)
-    .substring(2);
-
-  return <Redirect to={`s/${randomId}`} noThrow />;
-};
 
 const NotFound = () => <div>Wrong turn, mate</div>;
 
@@ -42,6 +39,7 @@ const App = () => (
     <GlobalStyle />
     <Router>
       <Home path="/" />
+      <Privacy path="privacy" />
       <Room path="s/:name" />
       <NotFound default />
     </Router>

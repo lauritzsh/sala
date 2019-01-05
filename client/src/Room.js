@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   padding: 1rem;
   grid-gap: 1rem;
   display: grid;
-  grid-template-columns: 1fr 400px;
+  grid-template-columns: 1fr 24rem;
   grid-template-rows: 4rem auto;
   width: 100%;
   height: 100%;
