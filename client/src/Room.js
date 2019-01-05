@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   grid-gap: 1rem;
   display: grid;
   grid-template-columns: 1fr 400px;
-  grid-template-rows: auto auto;
+  grid-template-rows: 4rem auto;
   width: 100%;
   height: 100%;
   position: absolute;

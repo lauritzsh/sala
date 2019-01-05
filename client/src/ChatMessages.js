@@ -12,11 +12,7 @@ const Jump = posed.div({
 const userToSymbol = (userId, users) => {
   const user = users.find(u => u.id === userId);
 
-  if (user) {
-    return user.symbol;
-  }
-
-  return '';
+  return user ? user.symbol : '';
 };
 
 const Message = ({ body, symbol, userId }) => (
@@ -29,7 +25,7 @@ const Message = ({ body, symbol, userId }) => (
         align-items: center;
       `}
     >
-      {symbol ? <Avatar symbol={symbol} /> : <Avatar />}
+      {symbol && <Avatar symbol={symbol} />}
     </div>
     <div
       css={`
@@ -42,10 +38,6 @@ const Message = ({ body, symbol, userId }) => (
 );
 
 export default ({ users, messages }) => {
-  if (!messages) {
-    return <div />;
-  }
-
   const Messages = () => (
     <PoseGroup>
       {messages.map(({ user_id, body }, i) => {
@@ -96,9 +88,12 @@ export default ({ users, messages }) => {
         }
       `}
       onScroll={event => {
-        const { target } = event;
-        const { scrollHeight, scrollTop, clientHeight } = target;
-        setIsAtBottom(scrollHeight - scrollTop === clientHeight);
+        event.preventDefault();
+        const { scrollHeight, scrollTop, clientHeight } = event.target;
+        if (scrollHeight - scrollTop === clientHeight) {
+          setIsAtBottom(true);
+        } else {
+        }
       }}
     >
       <div>
