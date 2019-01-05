@@ -26,6 +26,10 @@ const GlobalStyle = createGlobalStyle`
     background: #22292f;
     color: white;
   }
+  
+  p {
+    margin-top: 0;
+  }
 
   a {
     color: white;

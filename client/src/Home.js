@@ -44,11 +44,14 @@ export default () => (
                 padding: 1rem;
                 font-size: 1rem;
                 color: #f8fafc;
+                transition: background 0.25s, box-shadow 0.25s;
+                box-shadow: 0;
                 background: #3d4852;
                 cursor: pointer;
 
                 :hover {
                   background: #606f7b;
+                  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
                 }
               `}
               onClick={() => {
@@ -75,17 +78,23 @@ export default () => (
               ad-free experience anyway with Sala.
             </Feature>
             <Feature title="Synchronized video">
-              The worst is sharing a link with friends and telling them exactly
-              when to press play. With Sala, when you play and pause, the action
-              will be automatically synchronized to all your friends as well.
+              Hate sharing a video link with your friends and counting down when
+              to hit play? With Sala, your actions such as play and pause are
+              automatically shared, keeping all your videos synchronized.
             </Feature>
-            <Feature title="Supports many platforms">
-              See videos from many platforms such as YouTube, Facebook, Twitch,
-              Vimeo and more.
+            <Feature title="No bloat">
+              <p>
+                Only the most necessary features: A big player and a small chat
+                for you and your friends.
+              </p>
+              <p>
+                Missing a feature?{' '}
+                <a href="mailto:support@sala.com">Request here.</a>
+              </p>
             </Feature>
             <Feature title="Name your room">
-              Rooms are not limited to just random, gibberish names. Name them
-              anything you want so your friends can easily join.
+              Rooms don't have to be a random, gibberish name. Just enter any
+              name you want in the URL and your room will be created.
             </Feature>
           </div>
         </div>
