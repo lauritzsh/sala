@@ -112,7 +112,12 @@ const Feature = ({ title, children }) => (
 const FeatureSection = ({ className }) => (
   <Section className={className} css="background: white; color: #3D4852;">
     <Container>
-      <SectionTitle>Why Sala? 🤔</SectionTitle>
+      <SectionTitle>
+        Why Sala?{' '}
+        <span role="img" aria-label="Thinking">
+          🤔
+        </span>
+      </SectionTitle>
     </Container>
     <Container
       css={`
