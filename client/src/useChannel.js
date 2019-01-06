@@ -138,8 +138,6 @@ export default function useChannel(name) {
               dispatch({ type, payload });
             });
           });
-
-          dispatch({ type: '' });
         })
         .receive('error', error => {
           dispatch(actions.connectRoom.failure(error));

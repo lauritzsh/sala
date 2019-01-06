@@ -3,6 +3,8 @@ import { Link as InternalLink } from '@reach/router';
 import styled from 'styled-components/macro';
 
 import github from './icons/github.svg';
+import Container from './Container';
+import Section from './Section';
 
 const Icon = styled.img`
   display: block;
@@ -29,24 +31,28 @@ const Link = styled.a`
 `;
 
 export default () => (
-  <List>
-    <ListItem>
-      <Link as={InternalLink} to="/">
-        Home
-      </Link>
-    </ListItem>
-    <ListItem>
-      <Link as={InternalLink} to="/privacy">
-        Privacy
-      </Link>
-    </ListItem>
-    <ListItem right>
-      <Link href="mailto:support@sala.com">Contact</Link>
-    </ListItem>
-    <ListItem>
-      <Link href="https://github.com/lauritzsh/sala">
-        <Icon src={github} />
-      </Link>
-    </ListItem>
-  </List>
+  <Section css="background: #0E0E0E;">
+    <Container>
+      <List>
+        <ListItem>
+          <Link as={InternalLink} to="/">
+            Home
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Link as={InternalLink} to="/privacy">
+            Privacy
+          </Link>
+        </ListItem>
+        <ListItem right>
+          <Link href="mailto:support@sala.com">Contact</Link>
+        </ListItem>
+        <ListItem>
+          <Link href="https://github.com/salachat/sala">
+            <Icon src={github} />
+          </Link>
+        </ListItem>
+      </List>
+    </Container>
+  </Section>
 );
