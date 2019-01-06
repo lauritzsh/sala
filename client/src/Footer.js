@@ -29,30 +29,24 @@ const Link = styled.a`
 `;
 
 export default () => (
-  <div
-    css={`
-      margin: 2rem 0;
-    `}
-  >
-    <List>
-      <ListItem>
-        <Link as={InternalLink} to="/">
-          Home
-        </Link>
-      </ListItem>
-      <ListItem>
-        <Link as={InternalLink} to="/privacy">
-          Privacy
-        </Link>
-      </ListItem>
-      <ListItem right>
-        <Link href="mailto:support@sala.com">Contact</Link>
-      </ListItem>
-      <ListItem>
-        <Link href="https://github.com/lauritzsh/sala">
-          <Icon src={github} />
-        </Link>
-      </ListItem>
-    </List>
-  </div>
+  <List>
+    <ListItem>
+      <Link as={InternalLink} to="/">
+        Home
+      </Link>
+    </ListItem>
+    <ListItem>
+      <Link as={InternalLink} to="/privacy">
+        Privacy
+      </Link>
+    </ListItem>
+    <ListItem right>
+      <Link href="mailto:support@sala.com">Contact</Link>
+    </ListItem>
+    <ListItem>
+      <Link href="https://github.com/lauritzsh/sala">
+        <Icon src={github} />
+      </Link>
+    </ListItem>
+  </List>
 );
