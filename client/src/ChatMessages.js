@@ -38,30 +38,6 @@ const Message = ({ body, symbol, userId }) => (
 );
 
 export default ({ users, messages }) => {
-  const Messages = () => (
-    <PoseGroup>
-      {messages.map(({ user_id, body }, i) => {
-        const symbol = userToSymbol(user_id, users);
-
-        return (
-          <Jump
-            key={i}
-            css={`
-              display: flex;
-              margin-bottom: 0.5rem;
-
-              :last-of-type {
-                margin-bottom: 0;
-              }
-            `}
-          >
-            <Message body={body} symbol={symbol} userId={user_id} />
-          </Jump>
-        );
-      })}
-    </PoseGroup>
-  );
-
   const bottomRef = useRef(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
@@ -97,7 +73,27 @@ export default ({ users, messages }) => {
       }}
     >
       <div>
-        <Messages />
+        <PoseGroup>
+          {messages.map(({ user_id, body }, i) => {
+            const symbol = userToSymbol(user_id, users);
+
+            return (
+              <Jump
+                key={i}
+                css={`
+                  display: flex;
+                  margin-bottom: 0.5rem;
+
+                  :last-of-type {
+                    margin-bottom: 0;
+                  }
+                `}
+              >
+                <Message body={body} symbol={symbol} userId={user_id} />
+              </Jump>
+            );
+          })}
+        </PoseGroup>
       </div>
       <div ref={bottomRef} />
     </div>
