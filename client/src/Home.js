@@ -158,10 +158,14 @@ const FeatureSection = ({ className }) => (
   </Section>
 );
 
-export default () => (
-  <Wrapper>
-    <Hero />
-    <FeatureSection css="flex: 1;" />
-    <Footer />
-  </Wrapper>
-);
+export default () => {
+  document.title = 'Home';
+
+  return (
+    <Wrapper>
+      <Hero />
+      <FeatureSection css="flex: 1;" />
+      <Footer />
+    </Wrapper>
+  );
+};
