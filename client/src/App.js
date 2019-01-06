@@ -32,7 +32,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: white;
+    color: #22292F;
   }
 `;
 

@@ -26,7 +26,10 @@ export default () => (
       </p>
       <p>
         If you want to know more, please write to{' '}
-        <a href="mailto:support@sala.com">support@sala.com</a>.
+        <a href="mailto:support@sala.com" css="color: white;">
+          support@sala.com
+        </a>
+        .
       </p>
     </Container>
     <Footer />

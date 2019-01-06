@@ -62,7 +62,7 @@ const Image = styled.img`
 const Right = styled.div``;
 
 const Hero = () => (
-  <Section css="background: #2F80ED;">
+  <Section css="background: #2F80ED; color: #F8FAFC;">
     <Container css="margin-bottom: 4rem;">
       <Header />
     </Container>
@@ -110,9 +110,9 @@ const Feature = ({ title, children }) => (
 );
 
 const FeatureSection = ({ className }) => (
-  <Section className={className}>
+  <Section className={className} css="background: white; color: #3D4852;">
     <Container>
-      <SectionTitle>Why Sala?</SectionTitle>
+      <SectionTitle>Why Sala? 🤔</SectionTitle>
     </Container>
     <Container
       css={`
