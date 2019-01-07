@@ -159,7 +159,7 @@ const FeatureSection = ({ className }) => (
 );
 
 export default () => {
-  document.title = 'Home';
+  document.title = 'Sala';
 
   return (
     <Wrapper>

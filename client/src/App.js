@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Router } from '@reach/router';
 import { createGlobalStyle } from 'styled-components';
 import 'react-input-range/lib/css/index.css';
 
-import Home from './Home';
-import Privacy from './Privacy';
-import Room from './Room';
+const Home = lazy(() => import('./Home'));
+const Privacy = lazy(() => import('./Privacy'));
+const Room = lazy(() => import('./Room'));
+const NotFound = lazy(() => import('./NotFound'));
 
 const GlobalStyle = createGlobalStyle` 
   *,
@@ -36,17 +37,17 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-const NotFound = () => <div>Wrong turn, mate</div>;
-
 const App = () => (
   <>
     <GlobalStyle />
-    <Router>
-      <Home path="/" />
-      <Privacy path="privacy" />
-      <Room path="s/:name" />
-      <NotFound default />
-    </Router>
+    <Suspense fallback={null}>
+      <Router>
+        <Home path="/" />
+        <Privacy path="privacy" />
+        <Room path="s/:name" />
+        <NotFound default />
+      </Router>
+    </Suspense>
   </>
 );
 
