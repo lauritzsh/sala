@@ -18,7 +18,12 @@ export default () => {
     <Wrapper>
       <Header />
       <Container narrow css="flex: 1;">
-        <h1>Not found 😳</h1>
+        <h1>
+          Not found{' '}
+          <span role="img" aria-label="Surprised">
+            😳
+          </span>
+        </h1>
         <p>
           We are not sure what is supposed to be here but we know for certain it
           is gone. Sorry.
