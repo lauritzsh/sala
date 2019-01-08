@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
+import useOffline from './useOffline';
 import useChannel from './useChannel';
 
+import Dialog from './Dialog';
 import VideoInput from './VideoInput';
 import RoomStatus from './RoomStatus';
 import Chat from './Chat';
@@ -20,6 +22,7 @@ const Wrapper = styled.div`
 `;
 
 export default ({ name }) => {
+  const isOffline = useOffline();
   const [push, select] = useChannel(name);
 
   useEffect(
@@ -35,6 +38,9 @@ export default ({ name }) => {
 
   return (
     <Wrapper>
+      <Dialog warning show={isOffline}>
+        Your connection seems to be interrupted
+      </Dialog>
       <VideoInput
         url={select.getUrl()}
         onNewVideo={url => push.newVideo({ url })}
