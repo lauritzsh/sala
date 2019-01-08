@@ -14,6 +14,7 @@ const Icon = styled.img`
 `;
 
 const Wrapper = styled.div`
+  background: black;
   border-radius: 0.25rem;
   overflow: hidden;
   position: relative;

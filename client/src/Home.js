@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { navigate } from '@reach/router';
+import posed from 'react-pose';
 
 import previewImage from './preview.png';
 import playImage from './play.png';
@@ -23,8 +24,13 @@ const HeroTitle = styled.h1`
   margin-bottom: 1rem;
 `;
 
-const Button = styled.button`
-  background: #1f5aa9;
+const HoverButton = posed.button({
+  hoverable: true,
+  init: { scale: 1, backgroundColor: 'hsla(214, 69%, 39%, 1)' },
+  hover: { scale: 1.1, backgroundColor: 'hsla(214, 69%, 44%, 1)' },
+});
+
+const Button = styled(HoverButton)`
   border-radius: 0.25rem;
   border: none;
   color: white;
@@ -32,11 +38,6 @@ const Button = styled.button`
   margin-top: 2rem;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: background 250ms linear, box-shadow 250ms linear;
-
-  :hover {
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25);
-  }
 `;
 
 const ActionButton = ({ children }) => (
