@@ -130,7 +130,6 @@ export default function useChannel(name) {
       channel
         .join()
         .receive('ok', payload => {
-          window.state = payload;
           dispatch(actions.connectRoom.success(payload));
 
           Object.entries(events).forEach(([key, { type }]) => {

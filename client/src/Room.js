@@ -32,35 +32,37 @@ export default ({ name }) => {
     [name],
   );
 
-  if (!select.getIsConnected()) {
-    return <div />;
-  }
+  const isConnected = select.getIsConnected();
 
   return (
     <Wrapper>
       <Dialog warning show={isOffline}>
         Your connection seems to be interrupted
       </Dialog>
-      <VideoInput
-        url={select.getUrl()}
-        onNewVideo={url => push.newVideo({ url })}
-      />
-      <RoomStatus users={select.getUsers()} />
-      <Player
-        url={select.getUrl()}
-        isPlaying={select.getIsPlaying()}
-        timestamp={select.getTimestamp()}
-        onPlay={push.play}
-        onPause={push.pause}
-        onSeek={timestamp => push.seek({ timestamp })}
-      />
-      <Chat
-        messages={select.getMessages()}
-        users={select.getUsers()}
-        typingUsers={select.getTypingUsers()}
-        onAddMessage={body => push.addMessage({ body })}
-        onTyping={isTyping => push.userTyping({ isTyping })}
-      />
+      {isConnected && (
+        <>
+          <VideoInput
+            url={select.getUrl()}
+            onNewVideo={url => push.newVideo({ url })}
+          />
+          <RoomStatus users={select.getUsers()} />
+          <Player
+            url={select.getUrl()}
+            isPlaying={select.getIsPlaying()}
+            timestamp={select.getTimestamp()}
+            onPlay={push.play}
+            onPause={push.pause}
+            onSeek={timestamp => push.seek({ timestamp })}
+          />
+          <Chat
+            messages={select.getMessages()}
+            users={select.getUsers()}
+            typingUsers={select.getTypingUsers()}
+            onAddMessage={body => push.addMessage({ body })}
+            onTyping={isTyping => push.userTyping({ isTyping })}
+          />
+        </>
+      )}
     </Wrapper>
   );
 };

@@ -7,6 +7,7 @@ import ReactPlayer from 'react-player';
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  border-radius: 0.25rem;
   background: #3d4852;
   padding: 0.5rem;
 `;

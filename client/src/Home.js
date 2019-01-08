@@ -25,6 +25,7 @@ const HeroTitle = styled.h1`
 
 const Button = styled.button`
   background: #1f5aa9;
+  border-radius: 0.25rem;
   border: none;
   color: white;
   padding: 1rem;

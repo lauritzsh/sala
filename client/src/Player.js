@@ -14,19 +14,12 @@ const Icon = styled.img`
 `;
 
 const Wrapper = styled.div`
-  background: black;
+  border-radius: 0.25rem;
+  overflow: hidden;
   position: relative;
 `;
 
-export default ({
-  url,
-  isPlaying,
-  timestamp,
-  onPlay,
-  onPause,
-  onSeek,
-  style,
-}) => {
+export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
   const playerRef = useRef(null);
 
   const [duration, setDuration] = useState(null);
@@ -79,6 +72,7 @@ export default ({
         position: absolute;
         width: 100%;
         height: 100%;
+        border-radius: 0.25rem;
         background: linear-gradient(
           to bottom,
           rgba(0, 0, 0, 0) 0%,
