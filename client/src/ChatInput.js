@@ -5,10 +5,11 @@ const Input = styled.input`
   outline: none;
   color: white;
   border: none;
-  border-bottom: 1px solid #3d4852;
   background: none;
   font-size: 1rem;
-  padding-bottom: 0.25rem;
+  border-radius: 0.25rem;
+  background: #3d4852;
+  padding: 1rem 0.75rem;
 
   ::placeholder {
     color: #8795a1;

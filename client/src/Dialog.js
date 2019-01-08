@@ -33,7 +33,7 @@ export default ({ children, show, warning }) => (
             top: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            ${warning && 'background: #DE751F;'}
+            ${warning && 'background: #de751f;'}
             padding: 1rem 2rem;
             border-radius: 0.25rem;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
