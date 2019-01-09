@@ -42,7 +42,7 @@ export default ({ url, onNewVideo }) => {
     <Wrapper>
       <Input
         type="text"
-        placeholder="https://www.youtube.com/watch?v=pP44EPBMb8A"
+        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
         value={internalUrl}
         onChange={event => {
           const newUrl = event.target.value;
