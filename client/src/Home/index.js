@@ -6,10 +6,13 @@ import posed from 'react-pose';
 import previewImage from './preview.png';
 import playImage from './play.png';
 
-import Container from './Container';
-import Section from './Section';
-import Header from './Header';
-import Footer from './Footer';
+import {
+  Button as BaseButton,
+  Container,
+  Footer,
+  Header,
+  Section,
+} from 'shared';
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -24,21 +27,11 @@ const HeroTitle = styled.h1`
   margin-bottom: 1rem;
 `;
 
-const HoverButton = posed.button({
+const Button = posed(BaseButton)({
   hoverable: true,
   init: { scale: 1, backgroundColor: 'hsla(214, 69%, 39%, 1)' },
   hover: { scale: 1.1, backgroundColor: 'hsla(214, 69%, 44%, 1)' },
 });
-
-const Button = styled(HoverButton)`
-  border-radius: 0.25rem;
-  border: none;
-  color: white;
-  padding: 1rem;
-  margin-top: 2rem;
-  font-size: 1.5rem;
-  cursor: pointer;
-`;
 
 const ActionButton = ({ children }) => (
   <Button

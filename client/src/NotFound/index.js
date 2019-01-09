@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 
-import Container from './Container';
-import Header from './Header';
-import Footer from './Footer';
+import { Container, Footer, Header } from 'shared';
 
 const Wrapper = styled.div`
   display: flex;

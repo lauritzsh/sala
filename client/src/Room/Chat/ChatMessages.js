@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import posed, { PoseGroup } from 'react-pose';
 import 'styled-components/macro';
 
-import Avatar from './Avatar';
+import Avatar from '../Avatar';
 
 const Jump = posed.div({
   enter: { y: 0, opacity: 1 },

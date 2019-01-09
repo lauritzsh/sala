@@ -3,8 +3,8 @@ import ReactPlayer from 'react-player';
 import InputRange from 'react-input-range';
 import styled from 'styled-components/macro';
 
-import play from './icons/play.svg';
-import pause from './icons/pause.svg';
+import play from 'icons/play.svg';
+import pause from 'icons/pause.svg';
 
 const Icon = styled.img`
   color: white;

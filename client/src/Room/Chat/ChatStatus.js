@@ -2,7 +2,7 @@ import React from 'react';
 import posed, { PoseGroup } from 'react-pose';
 import styled from 'styled-components/macro';
 
-import Avatar from './Avatar';
+import Avatar from '../Avatar';
 
 const Wrapper = styled.div`
   display: flex;

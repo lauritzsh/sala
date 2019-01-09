@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
-import replace from './icons/replace.svg';
 import ReactPlayer from 'react-player';
+
+import replace from 'icons/replace.svg';
 
 const Wrapper = styled.div`
   display: flex;

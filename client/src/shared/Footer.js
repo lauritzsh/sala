@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as InternalLink } from '@reach/router';
 import styled from 'styled-components/macro';
 
-import github from './icons/github.svg';
+import github from 'icons/github.svg';
 import Container from './Container';
 import Section from './Section';
 
