@@ -1,8 +1,6 @@
-# Sala
+# Sala [![CircleCI](https://circleci.com/gh/lauritzsh/sala.svg?style=svg&circle-token=2a4f7eae79ce58ddc5765667b2b18bbf9b30bec6)](https://circleci.com/gh/lauritzsh/sala)
 
 Running in production at [sala.lauritz.me](https://sala.lauritz.me/).
-
-[![CircleCI](https://circleci.com/gh/lauritzsh/sala.svg?style=svg&circle-token=2a4f7eae79ce58ddc5765667b2b18bbf9b30bec6)](https://circleci.com/gh/lauritzsh/sala)
 
 Sala is a free online application that provides you with a private room for
 watching videos with your friends, colleagues, or anyone else. Share the link
