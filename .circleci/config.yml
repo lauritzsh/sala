@@ -30,7 +30,7 @@ jobs:
   build_server:
     docker:
       - image: elixir:1.6.6
-    working_directory: ~/code/api
+    working_directory: ~/code/server
     steps:
       - checkout:
           path: ~/code
@@ -59,7 +59,7 @@ jobs:
             - sala.tar.gz
   deploy:
     machine:
-        enabled: true
+      enabled: true
     working_directory: /tmp
     steps:
       - run: sudo apt update
@@ -81,7 +81,6 @@ jobs:
 
       ## Deploying client
       - run: rsync -va --delete client/* $CI_USER@$HOST:$OUT_DIR/client
-    
 
 workflows:
   version: 2
