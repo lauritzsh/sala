@@ -8,7 +8,7 @@ const Privacy = lazy(() => import('./Privacy'));
 const Room = lazy(() => import('./Room'));
 const NotFound = lazy(() => import('./NotFound'));
 
-const GlobalStyle = createGlobalStyle` 
+const GlobalStyle = createGlobalStyle`
   *,
   *:before,
   *:after {
@@ -19,21 +19,21 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     line-height: 1.5;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+      'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+      'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: #22292f;
     color: white;
   }
-  
+
   p {
     margin-top: 0;
   }
 
   a {
-    color: #22292F;
+    color: #22292f;
   }
 `;
 
