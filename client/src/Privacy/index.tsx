@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/macro';
+import { RouteComponentProps } from '@reach/router';
 
-import { Container, Footer, Header } from 'shared';
+import { Container, Footer, Header } from '../shared';
 
 const Wrapper = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
 `;
 
-export default () => {
+export default (props: RouteComponentProps) => {
   document.title = 'Privacy';
 
   return (
@@ -27,7 +28,7 @@ export default () => {
         </p>
         <p>
           If you want to know more, please write to{' '}
-          <a href="mailto:support@sala.com" css="color: white;">
+          <a href="mailto:support@sala.com" style={{ color: 'white' }}>
             support@sala.com
           </a>
           .

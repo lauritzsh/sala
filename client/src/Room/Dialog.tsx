@@ -3,7 +3,11 @@ import React, { useEffect, useRef } from 'react';
 import 'styled-components/macro';
 import posed, { PoseGroup } from 'react-pose';
 
-const Portal = ({ children }) => {
+type PortalProps = {
+  children: React.ReactNode;
+};
+
+const Portal = ({ children }: PortalProps) => {
   const { current: container } = useRef(document.createElement('div'));
 
   useEffect(() => {
@@ -22,7 +26,14 @@ const SlideDown = posed.div({
   exit: { x: '-50%', y: -100 },
 });
 
-export default ({ children, show, warning, info }) => (
+type Props = {
+  children?: React.ReactNode;
+  show: boolean;
+  warning?: boolean;
+  info?: boolean;
+};
+
+export default ({ children, show, warning, info }: Props) => (
   <Portal>
     <PoseGroup animateOnMount>
       {show && (

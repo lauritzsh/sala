@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import posed, { PoseGroup } from 'react-pose';
 import 'styled-components/macro';
 
+import { Box } from '../../shared';
 import Avatar from '../Avatar';
 
 const Jump = posed.div({
@@ -9,15 +10,27 @@ const Jump = posed.div({
   exit: { y: 10, opacity: 0 },
 });
 
-const userToSymbol = (userId, users) => {
+type User = {
+  id: string;
+  symbol: string;
+};
+
+const userToSymbol = (users: User[], userId?: string) => {
   const user = users.find(u => u.id === userId);
 
   return user ? user.symbol : '';
 };
 
-const Message = ({ body, symbol, userId }) => (
+type Message = {
+  body: string;
+  symbol: string;
+  userId?: string; // FIXME: should not be optional
+  user_id?: string; // FIXME: should be userId
+};
+
+const Message = ({ body, symbol, userId }: Message) => (
   <>
-    <div
+    <Box
       title={userId}
       css={`
         display: flex;
@@ -26,24 +39,29 @@ const Message = ({ body, symbol, userId }) => (
       `}
     >
       {symbol && <Avatar symbol={symbol} />}
-    </div>
-    <div
+    </Box>
+    <Box
       css={`
         flex: 1;
       `}
     >
       {body}
-    </div>
+    </Box>
   </>
 );
 
-export default ({ users, messages }) => {
-  const bottomRef = useRef(null);
+export type Props = {
+  users: User[];
+  messages: Message[];
+};
+
+export default ({ users, messages }: Props) => {
+  const bottomRef = useRef<HTMLInputElement>(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
 
   useEffect(
     () => {
-      if (isAtBottom) {
+      if (isAtBottom && bottomRef.current) {
         bottomRef.current.scrollIntoView({
           behavior: 'smooth',
           block: 'nearest',
@@ -55,7 +73,7 @@ export default ({ users, messages }) => {
   );
 
   return (
-    <div
+    <Box
       css={`
         overflow: hidden;
 
@@ -64,18 +82,18 @@ export default ({ users, messages }) => {
         }
       `}
       onScroll={event => {
-        event.preventDefault();
-        const { scrollHeight, scrollTop, clientHeight } = event.target;
-        if (scrollHeight - scrollTop === clientHeight) {
-          setIsAtBottom(true);
-        } else {
-        }
+        const {
+          scrollHeight,
+          scrollTop,
+          clientHeight,
+        } = event.target as HTMLDivElement;
+        setIsAtBottom(scrollHeight - scrollTop === clientHeight);
       }}
     >
       <div>
         <PoseGroup>
           {messages.map(({ user_id, body }, i) => {
-            const symbol = userToSymbol(user_id, users);
+            const symbol = userToSymbol(users, user_id);
 
             return (
               <Jump
@@ -96,6 +114,6 @@ export default ({ users, messages }) => {
         </PoseGroup>
       </div>
       <div ref={bottomRef} />
-    </div>
+    </Box>
   );
 };

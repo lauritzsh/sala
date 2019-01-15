@@ -19,13 +19,13 @@ const List = styled.ul`
   margin: 0 -1rem;
 `;
 
-const ListItem = styled.li`
+const ListItem = styled.li<{ right?: boolean }>`
   margin: 0 1rem;
   list-style-type: none;
   ${props => props.right && 'margin-left: auto;'}
 `;
 
-const Link = styled.a`
+const Link = styled.a<{ to?: string }>`
   color: white;
   text-decoration: none;
 `;

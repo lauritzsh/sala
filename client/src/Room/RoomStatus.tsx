@@ -15,7 +15,16 @@ const Fade = posed.div({
   exit: { opacity: 0 },
 });
 
-export default ({ users }) => (
+type User = {
+  id: string;
+  symbol: string;
+};
+
+type Props = {
+  users: User[];
+};
+
+export default ({ users }: Props) => (
   <Wrapper>
     <PoseGroup>
       {users.map(({ id, symbol }) => (

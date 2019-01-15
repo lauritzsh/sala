@@ -25,7 +25,7 @@ const Input = styled.input`
   }
 `;
 
-const Icon = styled.img`
+const Icon = styled.img<{ isPlayable: boolean }>`
   transition: opacity 0.25s linear;
   opacity: ${props => (props.isPlayable ? 1 : 0.25)};
   width: 1.5rem;
@@ -33,7 +33,12 @@ const Icon = styled.img`
   cursor: ${props => (props.isPlayable ? 'pointer' : '')};
 `;
 
-export default ({ url, onNewVideo }) => {
+type Props = {
+  url: string;
+  onNewVideo: (url: string) => void;
+};
+
+export default ({ url, onNewVideo }: Props) => {
   const [internalUrl, setInternalUrl] = useState(url);
 
   const isPlayable = ReactPlayer.canPlay(internalUrl);
@@ -47,6 +52,11 @@ export default ({ url, onNewVideo }) => {
         onChange={event => {
           const newUrl = event.target.value;
           setInternalUrl(newUrl);
+        }}
+        onKeyDown={event => {
+          if (event.key === 'Enter') {
+            onNewVideo(internalUrl);
+          }
         }}
       />
       <Icon

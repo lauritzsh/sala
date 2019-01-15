@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
+import { RouteComponentProps } from '@reach/router';
 
 import useOffline from './useOffline';
 import useChannel from './useChannel';
@@ -21,9 +22,13 @@ const Wrapper = styled.div`
   position: absolute;
 `;
 
-export default ({ name }) => {
+type Props = RouteComponentProps & {
+  name?: string;
+};
+
+export default ({ name }: Props) => {
   const isOffline = useOffline();
-  const [push, select] = useChannel(name);
+  const [push, select] = useChannel(name) as any;
 
   useEffect(
     () => {

@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player';
 import InputRange from 'react-input-range';
 import styled from 'styled-components/macro';
 
+import { Box } from '../../shared';
 import play from 'icons/play.svg';
 import pause from 'icons/pause.svg';
 
@@ -20,10 +21,26 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
-  const playerRef = useRef(null);
+type Props = {
+  url: string;
+  isPlaying: boolean;
+  timestamp: number;
+  onPlay: () => void;
+  onPause: () => void;
+  onSeek: (timestamp: number) => void;
+};
 
-  const [duration, setDuration] = useState(null);
+export default ({
+  url,
+  isPlaying,
+  timestamp,
+  onPlay,
+  onPause,
+  onSeek,
+}: Props) => {
+  const playerRef = useRef<any>(null);
+
+  const [duration, setDuration] = useState(0);
   const [isReady, setIsReady] = useState(false);
   const [internalTimestamp, setInternalTimestamp] = useState(timestamp);
   const [volume, setVolume] = useState(1);
@@ -52,8 +69,8 @@ export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
       playing={isPlaying}
       width={'100%'}
       height={'100%'}
-      onReady={player => {
-        setDuration(player.getDuration());
+      onReady={() => {
+        setDuration(playerRef.current.getDuration());
         setIsReady(true);
       }}
       onProgress={progress => {
@@ -66,7 +83,7 @@ export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
   );
 
   const controls = isReady && (
-    <div
+    <Box
       css={`
         display: flex;
         flex-direction: column;
@@ -87,22 +104,20 @@ export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
         }
       `}
     >
-      <div
-        css={`
-          flex: 1;
-        `}
+      <Box
+        css="flex: 1;"
         onClick={() => {
           isPlaying ? onPause() : onPlay();
         }}
       />
-      <div
+      <Box
         css={`
           display: flex;
           align-items: center;
           margin: 1rem;
         `}
       >
-        <div
+        <Box
           css={`
             width: 2rem;
             cursor: pointer;
@@ -112,8 +127,8 @@ export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
           }}
         >
           {isPlaying ? <Icon src={pause} /> : <Icon src={play} />}
-        </div>
-        <div
+        </Box>
+        <Box
           css={`
             flex: 1;
             margin: 0 2rem;
@@ -124,11 +139,11 @@ export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
             maxValue={duration}
             value={internalTimestamp}
             formatLabel={() => ''}
-            onChangeComplete={onSeek}
-            onChange={setInternalTimestamp}
+            onChangeComplete={value => onSeek(value as number)}
+            onChange={value => setInternalTimestamp(value as number)}
           />
-        </div>
-        <div
+        </Box>
+        <Box
           css={`
             width: 8rem;
             margin-right: 1rem;
@@ -140,11 +155,11 @@ export default ({ url, isPlaying, timestamp, onPlay, onPause, onSeek }) => {
             step={0.01}
             value={volume}
             formatLabel={() => ''}
-            onChange={setVolume}
+            onChange={value => setVolume(value as number)}
           />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 
   return (

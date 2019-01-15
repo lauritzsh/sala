@@ -1,9 +1,9 @@
 import React from 'react';
 import 'styled-components/macro';
 
-import Container from './Container';
+import { Box, Container } from '.';
 
-const Logo = () => <div css="font-size: 2rem;">Sala</div>;
+const Logo = () => <Box css="font-size: 2rem;">Sala</Box>;
 
 export default () => (
   <Container>

@@ -1,18 +1,19 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { navigate } from '@reach/router';
+import { RouteComponentProps, navigate } from '@reach/router';
 import posed from 'react-pose';
 
 import previewImage from './preview.png';
 import playImage from './play.png';
 
 import {
+  Box,
   Button as BaseButton,
   Container,
   Footer,
   Header,
   Section,
-} from 'shared';
+} from '../shared';
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -33,7 +34,11 @@ const Button = posed(BaseButton)({
   hover: { scale: 1.1, backgroundColor: 'hsla(214, 69%, 44%, 1)' },
 });
 
-const ActionButton = ({ children }) => (
+type ActionButtonProps = {
+  children: React.ReactNode;
+};
+
+const ActionButton = ({ children }: ActionButtonProps) => (
   <Button
     onClick={() => {
       const randomId = Math.random()
@@ -47,17 +52,21 @@ const ActionButton = ({ children }) => (
   </Button>
 );
 
-const Left = styled.div``;
-
-const Image = styled.img`
+const Image = styled.img<{ css?: string }>`
   display: block;
   max-width: 100%;
 `;
 
-const Right = styled.div``;
+const Left = Box;
+const Right = Box;
 
 const Hero = () => (
-  <Section css="background: #2F80ED; color: #F8FAFC;">
+  <Section
+    css={`
+      background: #2f80ed;
+      color: #f8fafc;
+    `}
+  >
     <Container css="margin-bottom: 4rem;">
       <Header />
     </Container>
@@ -97,14 +106,24 @@ const FeatureTitle = styled.h3`
   margin-bottom: 0.5rem;
 `;
 
-const Feature = ({ title, children }) => (
-  <div css="margin-bottom: 2rem;">
+type FeatureProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+const Feature = ({ title, children }: FeatureProps) => (
+  <Box css="margin-bottom: 2rem;">
     <FeatureTitle>{title}</FeatureTitle>
     {children}
-  </div>
+  </Box>
 );
 
-const FeatureSection = ({ className }) => (
+type FeatureSectionProps = {
+  css?: string;
+  className?: string;
+};
+
+const FeatureSection = ({ className }: FeatureSectionProps) => (
   <Section className={className} css="background: white; color: #3D4852;">
     <Container>
       <SectionTitle>
@@ -153,7 +172,7 @@ const FeatureSection = ({ className }) => (
   </Section>
 );
 
-export default () => {
+export default (props: RouteComponentProps) => {
   document.title = 'Sala';
 
   return (

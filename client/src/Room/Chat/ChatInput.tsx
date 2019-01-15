@@ -16,7 +16,12 @@ const Input = styled.input`
   }
 `;
 
-export default ({ onAddMessage, onTyping }) => {
+export type Props = {
+  onAddMessage: (body: string) => void;
+  onTyping: (typing: boolean) => void;
+};
+
+export default ({ onAddMessage, onTyping }: Props) => {
   const [text, setText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
