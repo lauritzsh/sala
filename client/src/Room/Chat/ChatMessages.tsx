@@ -26,6 +26,9 @@ type Message = {
   symbol: string;
   userId?: string; // FIXME: should not be optional
   user_id?: string; // FIXME: should be userId
+  // the reason is because the backend sends `user_id`
+  // so need to figure out how it can send `userId` instead
+  // but still use `user_id` internally
 };
 
 const Message = ({ body, symbol, userId }: Message) => (

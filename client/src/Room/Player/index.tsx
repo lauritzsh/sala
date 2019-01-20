@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactPlayer from 'react-player';
+import YouTube from 'react-youtube';
 import InputRange from 'react-input-range';
 import styled from 'styled-components/macro';
 
@@ -14,102 +14,138 @@ const Icon = styled.img`
   cursor: pointer;
 `;
 
-const Wrapper = styled.div`
-  background: black;
-  border-radius: 0.25rem;
-  overflow: hidden;
-  position: relative;
-`;
+type Timestamp = number;
+
+const getId = (input: string) => {
+  const match = input.match(/v=(\w+)/);
+
+  if (match) {
+    return match[1];
+  }
+
+  if (input.length === 10) {
+    return input;
+  }
+
+  return ''; // invalid
+};
 
 type Props = {
   url: string;
   isPlaying: boolean;
-  timestamp: number;
+  startFrom: Timestamp;
   onPlay: () => void;
   onPause: () => void;
-  onSeek: (timestamp: number) => void;
+  onSeek: (timestamp: Timestamp) => void;
 };
 
-export default ({
+const Player = ({
   url,
   isPlaying,
-  timestamp,
+  startFrom,
   onPlay,
   onPause,
   onSeek,
 }: Props) => {
-  const playerRef = useRef<any>(null);
+  const id = getId(url);
 
-  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(startFrom);
+  const [videoDuration, setVideoDuration] = useState(0);
+  const [volume, setVolume] = useState(100);
   const [isReady, setIsReady] = useState(false);
-  const [internalTimestamp, setInternalTimestamp] = useState(timestamp);
-  const [volume, setVolume] = useState(1);
+  const playerRef = useRef<any>(null);
 
   useEffect(
     () => {
-      setInternalTimestamp(timestamp);
-      playerRef.current.seekTo(timestamp);
+      const { current: player } = playerRef;
+      if (player) {
+        player.setVolume(volume);
+      }
     },
-    [timestamp],
+    [volume],
+  );
+
+  useEffect(
+    () => {
+      const { current: player } = playerRef;
+      if (player) {
+        player.seekTo(startFrom);
+        setCurrentTime(startFrom);
+      }
+    },
+    [isReady, startFrom],
+  );
+
+  useEffect(
+    () => {
+      const intervalFn = () => {
+        const { current: player } = playerRef;
+        if (player) {
+          isPlaying ? player.playVideo() : player.pauseVideo();
+        }
+      };
+
+      intervalFn();
+
+      const interval = setInterval(intervalFn, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    },
+    [isReady, isPlaying],
+  );
+
+  useEffect(
+    () => {
+      const interval = setInterval(() => {
+        if (isPlaying) {
+          setCurrentTime(time => time + 1);
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    },
+    [isPlaying],
   );
 
   const player = (
-    <ReactPlayer
-      ref={playerRef}
-      config={{
-        youtube: {
-          playerVars: { start: timestamp },
-        },
-      }}
+    <Box
       css={`
         position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 0.25rem;
+        overflow: hidden;
       `}
-      url={url}
-      volume={volume}
-      playing={isPlaying}
-      width={'100%'}
-      height={'100%'}
-      onReady={() => {
-        setDuration(playerRef.current.getDuration());
-        setIsReady(true);
-      }}
-      onProgress={progress => {
-        setInternalTimestamp(progress.playedSeconds);
-      }}
-      onEnded={() => {
-        onPause();
-      }}
-    />
+    >
+      <YouTube
+        opts={{
+          width: '100%',
+          height: '100%',
+          playerVars: { controls: 0 },
+        }}
+        videoId={id}
+        onReady={({ target: player }) => {
+          (window as any).player = player;
+          playerRef.current = player;
+          setVideoDuration(player.getDuration());
+          setIsReady(true);
+        }}
+      />
+    </Box>
   );
 
   const controls = isReady && (
     <Box
       css={`
-        display: flex;
-        flex-direction: column;
         position: absolute;
         width: 100%;
-        height: 100%;
-        border-radius: 0.25rem;
-        background: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0) 0%,
-          rgba(0, 0, 0, 0.1) 100%
-        );
-        transition: opacity 0.25s linear;
-        opacity: 0;
-
-        :hover {
-          opacity: 1;
-        }
+        bottom: 0;
       `}
     >
-      <Box
-        css="flex: 1;"
-        onClick={() => {
-          isPlaying ? onPause() : onPlay();
-        }}
-      />
       <Box
         css={`
           display: flex;
@@ -117,45 +153,29 @@ export default ({
           margin: 1rem;
         `}
       >
-        <Box
-          css={`
-            width: 2rem;
-            cursor: pointer;
-          `}
-          onClick={() => {
-            isPlaying ? onPause() : onPlay();
-          }}
-        >
-          {isPlaying ? <Icon src={pause} /> : <Icon src={play} />}
+        <Box css="width: 2rem;">
+          {isPlaying ? (
+            <Icon src={pause} onClick={() => onPause()} />
+          ) : (
+            <Icon src={play} onClick={() => onPlay()} />
+          )}
         </Box>
-        <Box
-          css={`
-            flex: 1;
-            margin: 0 2rem;
-          `}
-        >
+        <Box css="flex: 1; margin: 0 2rem;">
           <InputRange
             minValue={0}
-            maxValue={duration}
-            value={internalTimestamp}
+            maxValue={videoDuration}
+            value={currentTime}
+            onChange={value => onSeek(value as number)}
             formatLabel={() => ''}
-            onChangeComplete={value => onSeek(value as number)}
-            onChange={value => setInternalTimestamp(value as number)}
           />
         </Box>
-        <Box
-          css={`
-            width: 8rem;
-            margin-right: 1rem;
-          `}
-        >
+        <Box css="width: 8rem; margin-right: 1rem;">
           <InputRange
             minValue={0}
-            maxValue={1}
-            step={0.01}
+            maxValue={100}
             value={volume}
-            formatLabel={() => ''}
             onChange={value => setVolume(value as number)}
+            formatLabel={() => ''}
           />
         </Box>
       </Box>
@@ -163,9 +183,21 @@ export default ({
   );
 
   return (
-    <Wrapper>
+    <Box
+      css={`
+        position: relative;
+      `}
+    >
       {player}
       {controls}
-    </Wrapper>
+    </Box>
   );
 };
+
+Player.defaultProps = {
+  onPlay: () => {},
+  onPause: () => {},
+  onSeek: () => {},
+};
+
+export default Player;

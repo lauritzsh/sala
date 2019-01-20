@@ -54,7 +54,7 @@ export default ({ name }: Props) => {
           <Player
             url={select.getUrl()}
             isPlaying={select.getIsPlaying()}
-            timestamp={select.getTimestamp()}
+            startFrom={select.getTimestamp()}
             onPlay={push.play}
             onPause={push.pause}
             onSeek={timestamp => push.seek({ timestamp })}
