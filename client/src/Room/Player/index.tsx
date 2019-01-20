@@ -128,6 +128,7 @@ const Player = ({
           playerVars: { controls: 0 },
         }}
         videoId={id}
+        onEnd={() => onPause()}
         onReady={({ target: player }) => {
           (window as any).player = player;
           playerRef.current = player;

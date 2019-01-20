@@ -6,5 +6,5 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
-// Will help load assets much faster
-serviceWorker.register();
+// Will help load assets much faster (if set to `register`)
+serviceWorker.unregister();
