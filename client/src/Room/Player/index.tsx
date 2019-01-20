@@ -111,7 +111,7 @@ const Player = ({
     [isPlaying],
   );
 
-  const player = (
+  const player = id && (
     <Box
       css={`
         position: absolute;
