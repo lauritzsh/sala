@@ -21,7 +21,8 @@ config :sala, SalaWeb.Endpoint,
   http: [port: {:system, "PORT"}], # Possibly not needed, but doesn't hurt
   url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 80],
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
-  server: true
+  server: true,
+  check_origin: false
 
 # Do not print debug messages in production
 config :logger, level: :info
