@@ -3,6 +3,7 @@ import posed, { PoseGroup } from 'react-pose';
 import styled from 'styled-components/macro';
 
 import Avatar from '../Avatar';
+import { Box } from '../../shared';
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,21 +29,23 @@ export default ({ typingUsers }: Props) => {
     <Wrapper>
       <PoseGroup flipMove={false}>
         {typingUsers.map((u, index) => (
-          <>
-            <Fade key={u.id}>
-              <Avatar symbol={u.symbol} medium />
-            </Fade>
+          <Fade
+            key={u.id}
+            css={`
+              display: flex;
+            `}
+          >
+            <Avatar symbol={u.symbol} medium />
             {index === typingUsers.length - 1 && (
-              <Fade
-                key="info"
+              <Box
                 css={`
                   margin-left: 0.25rem;
                 `}
               >
                 is typing
-              </Fade>
+              </Box>
             )}
-          </>
+          </Fade>
         ))}
       </PoseGroup>
     </Wrapper>
